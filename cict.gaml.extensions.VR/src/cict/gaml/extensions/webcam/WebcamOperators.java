@@ -19,7 +19,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.objdetect.CascadeClassifier;
 
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.IOperatorCategory;
@@ -37,8 +37,8 @@ public class WebcamOperators {
 											// CascadeClassifier(WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
 	static MatOfRect faceDetections;
 
-	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image,
-			final ILocation preferredSize) {
+	private static IMatrix<Integer> matrixValueFromImage(final IScope scope, final BufferedImage image,
+			final GamaPoint preferredSize) {
 		int xSize, ySize;
 		BufferedImage resultingImage = image;
 		if (preferredSize == null) {

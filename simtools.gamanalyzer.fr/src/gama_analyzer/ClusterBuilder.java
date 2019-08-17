@@ -25,7 +25,7 @@ import java.util.List;
 import msi.gama.metamodel.agent.GamlAgent;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.population.IPopulation;
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -74,17 +74,17 @@ public class ClusterBuilder extends GamlAgent {
 				final String attrib = attributes.get(i);
 				Double var = Cast.asFloat(scope, ag.getDirectVarValue(scope, attrib));
 				if (attrib.contains(".x") == true) {
-					final ILocation varp = Cast.asPoint(scope,
+					final GamaPoint varp = Cast.asPoint(scope,
 							ag.getDirectVarValue(scope, attrib.substring(0, attrib.length() - 2)));
 					var = varp.getX();
 				}
 				if (attrib.contains(".y") == true) {
-					final ILocation varp = Cast.asPoint(scope,
+					final GamaPoint varp = Cast.asPoint(scope,
 							ag.getDirectVarValue(scope, attrib.substring(0, attrib.length() - 2)));
 					var = varp.getY();
 				}
 				if (attrib.contains(".z") == true) {
-					final ILocation varp = Cast.asPoint(scope,
+					final GamaPoint varp = Cast.asPoint(scope,
 							ag.getDirectVarValue(scope, attrib.substring(0, attrib.length() - 2)));
 					var = varp.getZ();
 				}

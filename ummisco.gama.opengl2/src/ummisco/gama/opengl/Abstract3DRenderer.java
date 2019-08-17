@@ -28,14 +28,14 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.swt.GLCanvas;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.ILayer;
 import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.outputs.display.AbstractDisplayGraphics;
 import msi.gama.outputs.layers.OverlayLayer;
@@ -367,17 +367,17 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	}
 
 	// @Override
-	public final ILocation getCameraPos() {
+	public final GamaPoint getCameraPos() {
 		return camera.getPosition();
 	}
 
 	// @Override
-	public final ILocation getCameraTarget() {
+	public final GamaPoint getCameraTarget() {
 		return camera.getTarget();
 	}
 
 	// @Override
-	public final ILocation getCameraOrientation() {
+	public final GamaPoint getCameraOrientation() {
 		return camera.getOrientation();
 	}
 

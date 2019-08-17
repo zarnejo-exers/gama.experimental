@@ -17,7 +17,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 
 import ifc2x3javatoolbox.ifc2x3tc1.IfcArbitraryClosedProfileDef;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcAxis2Placement;
@@ -68,7 +68,6 @@ import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.file;
 import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
@@ -175,9 +174,9 @@ public class GamaIFCFile extends GamaGeometryFile {
 			origin.z += newPt.z;
 		}
 
-		public void addRotation(final GamaPoint xVector) {
+		public void addRotation(final IScope scope, final GamaPoint xVector) {
 			xDir = toNewRef(xVector, true);
-			yDir = (GamaPoint) Spatial.Transformations.rotated_by(GAMA.getRuntimeScope(), xVector, 90).getLocation();
+			yDir = Spatial.Transformations.rotated_by(scope, xVector, 90).getLocation();
 		}
 
 		public void addRotation(final GamaPoint xVector, final GamaPoint zVector) {
@@ -196,16 +195,16 @@ public class GamaIFCFile extends GamaGeometryFile {
 			});
 		}
 
-		public void update(final List<IfcAxis2Placement> axispls, final boolean reverse) {
+		public void update(final IScope scope, final List<IfcAxis2Placement> axispls, final boolean reverse) {
 			if (reverse) {
 				Collections.reverse(axispls);
 			}
 			for (final IfcAxis2Placement ap : axispls) {
-				update(ap);
+				update(scope, ap);
 			}
 		}
 
-		public void update(final IfcAxis2Placement axispl) {
+		public void update(final IScope scope, final IfcAxis2Placement axispl) {
 			if (axispl instanceof IfcAxis2Placement2D) {
 				final IfcAxis2Placement2D axispl2D = (IfcAxis2Placement2D) axispl;
 				final GamaPoint loc = toPoint(axispl2D.getLocation());
@@ -213,7 +212,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 				if (axispl2D.getRefDirection() != null) {
 					final GamaPoint dir = toPoint(axispl2D.getRefDirection());
-					addRotation(dir);
+					addRotation(scope, dir);
 				}
 			} else if (axispl instanceof IfcAxis2Placement3D) {
 				final IfcAxis2Placement3D axispl3D = (IfcAxis2Placement3D) axispl;
@@ -248,7 +247,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, o.getObjectPlacement(), aps);
-		newAxe.update(aps, true);
+		newAxe.update(scope, aps, true);
 		final IShape box = Spatial.Creation.sphere(scope, 0.2);
 		addAttribtutes(o, box);
 		newAxe.transform(box);
@@ -291,7 +290,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, d.getObjectPlacement(), aps);
-		newAxe.update(aps, true);
+		newAxe.update(scope, aps, true);
 		final double height = d.getOverallHeight().value;
 		final double width = d.getOverallWidth().value;
 		Double depth = defineDoorDepth(scope, d.getObjectPlacement(), depths);
@@ -358,7 +357,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 			axisplFirst = ((IfcLocalPlacement) d.getObjectPlacement()).getRelativePlacement();
 		}
 
-		newAxe.update(aps, true);
+		newAxe.update(scope, aps, true);
 		final double height = d.getOverallHeight().value;
 		final double width = d.getOverallWidth().value;
 		Double depth = defineDoorDepth(scope, d.getObjectPlacement(), depths);
@@ -403,7 +402,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, w.getObjectPlacement(), aps);
-		newAxe.update(aps, true);
+		newAxe.update(scope, aps, true);
 		final IList<IShape> linePts = GamaListFactory.create(Types.POINT);
 
 		for (final IfcRepresentation r : w.getRepresentation().getRepresentations()) {
@@ -487,7 +486,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, s.getObjectPlacement(), aps);
-		newAxe.update(aps, true);
+		newAxe.update(scope, aps, true);
 		for (final IfcRepresentation rep : s.getRepresentation().getRepresentations()) {
 			for (final IfcRepresentationItem item : rep.getItems()) {
 
@@ -495,7 +494,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 					final IfcExtrudedAreaSolid solid = (IfcExtrudedAreaSolid) item;
 					final Double depth = solid.getDepth().value;
 					if (solid.getPosition() != null) {
-						newAxe.update(solid.getPosition());
+						newAxe.update(scope, solid.getPosition());
 					}
 					if (solid.getSweptArea() instanceof IfcRectangleProfileDef) {
 						final IfcRectangleProfileDef profil = (IfcRectangleProfileDef) solid.getSweptArea();
@@ -535,14 +534,14 @@ public class GamaIFCFile extends GamaGeometryFile {
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, s.getObjectPlacement(), aps);
-		newAxe.update(aps, true);
+		newAxe.update(scope, aps, true);
 
 		for (final IfcRepresentation rep : s.getRepresentation().getRepresentations()) {
 			for (final IfcRepresentationItem item : rep.getItems()) {
 				if (item instanceof IfcExtrudedAreaSolid) {
 					final IfcExtrudedAreaSolid solid = (IfcExtrudedAreaSolid) item;
 					if (solid.getPosition() != null) {
-						newAxe.update(solid.getPosition());
+						newAxe.update(scope, solid.getPosition());
 					}
 					final Double depth = solid.getDepth().value;
 					if (solid.getSweptArea() instanceof IfcRectangleProfileDef) {

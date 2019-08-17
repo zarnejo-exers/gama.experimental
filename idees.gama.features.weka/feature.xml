@@ -2,7 +2,7 @@
 <feature
       id="idees.gama.features.weka"
       label="Weka"
-      version="1.7.0.qualifier">
+      version="1.9.0.qualifier">
 
    <description url="http://www.example.com/description">
       Plug-in allowing to use Weka Clustring algorithms through GAML

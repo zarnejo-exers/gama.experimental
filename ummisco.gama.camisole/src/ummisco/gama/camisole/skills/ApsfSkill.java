@@ -297,7 +297,7 @@ public class ApsfSkill extends Skill {
 		if (!this.containsTemplate(templateNames, templateName)) { return; }
 		final Template tt = soil.getTemplateWithName(templateName);
 		tt.addProcess(processName, userToApsf(particleName), scale);
-		final Object[] ttmp = { processName, tt, particleName, new Integer(scale) };
+		final Object[] ttmp = { processName, tt, particleName, (scale) };
 		processes.add(ttmp);
 
 	}

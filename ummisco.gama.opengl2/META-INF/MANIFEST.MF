@@ -13,7 +13,7 @@ Require-Bundle: msi.gama.ext,
  msi.gama.application;bundle-version="1.7.0",
  com.google.guava
 Bundle-ActivationPolicy: lazy
-Import-Package: com.vividsolutions.jts.geom,
+Import-Package: org.locationtech.jts.geom,
  org.apache.commons.lang;version="2.6.0",
  org.jfree.chart
 Export-Package: 
@@ -225,3 +225,4 @@ Bundle-ClassPath: .,
  jogamp-fat.jar
 Bundle-Vendor: UMMISCO
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: ummisco.gama.opengl2

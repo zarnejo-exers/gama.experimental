@@ -16,7 +16,7 @@ import org.eclipse.swt.SWT;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.outputs.LayeredDisplayData;
 import msi.gaml.operators.Maths;
@@ -173,7 +173,7 @@ public class CameraArcBall extends AbstractCamera {
 
 	// public void followAgent(IAgent a) {
 	//
-	// ILocation l = a.getGeometry().getLocation();
+	// GamaPoint l = a.getGeometry().getLocation();
 	// Envelope env = a.getGeometry().getEnvelope();
 	//
 	// double xPos = l.getX() - myRenderer.displaySurface.getEnvWidth() / 2;
@@ -380,7 +380,7 @@ public class CameraArcBall extends AbstractCamera {
 
 	@Override
 	public void zoomFocus(final IShape shape) {
-		final ILocation p = shape.getLocation();
+		final GamaPoint p = shape.getLocation();
 		final double extent = shape.getEnvelope().maxExtent();
 		if (extent == 0) {
 			radius = p.getZ() + getRenderer().getMaxEnvDim() / 10;

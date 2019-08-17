@@ -22,6 +22,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.locationtech.jts.geom.Polygon;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -42,7 +44,6 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
-import com.vividsolutions.jts.geom.Polygon;
 
 import jogamp.opengl.glu.tessellator.GLUtessellatorImpl;
 import msi.gama.common.geometry.Envelope3D;
@@ -56,6 +57,7 @@ import msi.gama.common.preferences.IPreferenceChangeListener;
 import msi.gama.common.util.ImageUtils;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.GAMA;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gama.util.file.GamaImageFile;
 import msi.gaml.operators.Maths;
@@ -414,7 +416,7 @@ public class OpenGL {
 	 */
 	public void drawPolygon(final Polygon p, final ICoordinates yNegatedVertices, final boolean clockwise) {
 		if (useJTSTriangulation) {
-			iterateOverTriangles(p,
+			iterateOverTriangles(GAMA.getRuntimeScope(), p,
 					(tri) -> drawSimpleShape(getYNegatedCoordinates(tri), 3, true, clockwise, false, null));
 		} else {
 			gluTessBeginPolygon(tobj, null);
@@ -997,7 +999,6 @@ public class OpenGL {
 
 	public void initializeShapeCache() {
 		final int slices = GamaPreferences.Displays.DISPLAY_SLICE_NUMBER.getValue();
-		final int stacks = slices;
 		textured = true;
 		// geometryCache.put(SPHERE, BuiltInGeometry.assemble().faces(compileAsList(() -> {
 		// drawSphere(1.0, slices, stacks);
@@ -1079,7 +1080,7 @@ public class OpenGL {
 			.010718, .04, .018716, .028577, .028577, .018716, .04, .010718, .052638, .004825, .066108, .001215, .08,
 			0 };
 
-	static DoubleBuffer db = (DoubleBuffer) Buffers.newDirectDoubleBuffer(roundRect.length).put(roundRect).rewind();
+	static DoubleBuffer db = Buffers.newDirectDoubleBuffer(roundRect.length).put(roundRect).rewind();
 
 	public void drawRoundedRectangle() {
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
@@ -1169,7 +1170,6 @@ public class OpenGL {
 
 		double da, r, dr, dz;
 		double x, y, z, nz;
-		final double nsign;
 		int i, j;
 		da = PI_2 / slices;
 		dr = (top - base) / stacks;

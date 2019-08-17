@@ -103,7 +103,7 @@ public abstract class Template {
 			data = new HashMap<>();
 			this.processes.put(particleType, data);
 		}
-		final Integer k = new Integer(scale);
+		final Integer k = (scale);
 		if (data.containsKey(k)) {
 			data.remove(k);
 		}
@@ -116,7 +116,7 @@ public abstract class Template {
 																						// List<GamlSpecies>> ?
 		GamlSpecies processName = null;
 		if (data != null) {
-			processName = data.get(new Integer(p.getLocation().getScale()));
+			processName = data.get((p.getLocation().getScale()));
 		}
 		if (processName == null) {
 			processName = p.getWorld().getDefaultSpecies();
@@ -132,8 +132,8 @@ public abstract class Template {
 		p.setAgent(agt);
 
 		if (data != null) {
-			// for (final GamlSpecies spe : data.get(new Integer(p.getLocation().getScale()))) {
-			final GamlSpecies spe = data.get(new Integer(p.getLocation().getScale()));
+			// for (final GamlSpecies spe : data.get((p.getLocation().getScale()))) {
+			final GamlSpecies spe = data.get((p.getLocation().getScale()));
 			processName = spe;
 			System.out.println("modification " + processName.getName());
 			values = new HashMap<>();

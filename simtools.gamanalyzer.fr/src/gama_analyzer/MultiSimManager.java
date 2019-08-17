@@ -24,7 +24,7 @@ public class MultiSimManager {
 		this.agentGroupFollowerList = agentGroupFollowerList;
 		this.storableDataList = storableDataList;
 		this.groupIdRuleList = groupIdRuleList;
-		this.idSimList = idSimList;
+		this.idSimList = identifiants;
 		this.simColorList = simColorList;
 	}
 

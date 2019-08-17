@@ -1,7 +1,7 @@
 package ummisco.gama.unity.skills;
 
 import com.thoughtworks.xstream.XStream;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 import msi.gama.common.geometry.GamaCoordinateSequence;
 import msi.gama.common.geometry.GamaCoordinateSequenceFactory;

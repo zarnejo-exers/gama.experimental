@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.outputs.IOutput;
 import msi.gama.outputs.LayeredDisplayOutput;
 import msi.gama.precompiler.GamlAnnotations.action;
@@ -20,7 +20,7 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
  
 @vars({ @variable(name = IUILocatedSkill.AGENT_LOCATION, type = IType.POINT, doc = @doc("locked location")),
 	@variable(name = IUILocatedSkill.AGENT_LOCKED_WIDTH, type = IType.FLOAT, doc = @doc("locked width")),
@@ -107,7 +107,7 @@ public class UILocatedSkill extends Skill {
 		
 		double tui_width = (xmax - xmin) * ui_width;
 		double tui_height = (ymax - ymin) * ui_height;
-		ILocation loc = new GamaPoint(xx,yy);
+		GamaPoint loc = new GamaPoint(xx,yy);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_WIDTH, tui_width);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_HEIGHT, tui_height);
 		agt.setLocation(loc);

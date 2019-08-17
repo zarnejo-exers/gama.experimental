@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.modernOpenGL.shader;
@@ -16,7 +16,6 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL3;
-
 
 import ummisco.gama.opengl.vaoGenerator.GeomMathUtils;
 
@@ -71,8 +70,10 @@ public abstract class AbstractShader {
 	private int loadShader(final InputStream is, final int type) {
 		String shaderString = null;
 
-		final java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-		shaderString = s.hasNext() ? s.next() : "";
+		try (final java.util.Scanner s = new java.util.Scanner(is)) {
+			s.useDelimiter("\\A");
+			shaderString = s.hasNext() ? s.next() : "";
+		}
 
 		final int shaderID = gl.glCreateShader(type);
 

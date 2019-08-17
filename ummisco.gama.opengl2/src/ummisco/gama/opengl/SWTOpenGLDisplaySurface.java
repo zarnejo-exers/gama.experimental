@@ -4,7 +4,7 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl;
@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Menu;
 import com.jogamp.opengl.GLAnimatorControl;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.interfaces.IDisplaySurface;
@@ -39,7 +39,6 @@ import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.common.util.ImageUtils;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.metamodel.topology.filter.Different;
 import msi.gama.outputs.LayeredDisplayData;
@@ -102,12 +101,12 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 		output.getData().addListener(this);
 		output.setSurface(this);
 		setDisplayScope(output.getScope().copy("in OpenGLDisplaySuface"));
-//		if (getOutput().getData().useShader()) {
-			renderer = new ModernRenderer();
+		// if (getOutput().getData().useShader()) {
+		renderer = new ModernRenderer();
 
-//		} else {
-//			renderer = new JOGLRenderer();
-//		}
+		// } else {
+		// renderer = new JOGLRenderer();
+		// }
 		renderer.setDisplaySurface(this);
 		animator = createAnimator();
 
@@ -124,7 +123,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getImage()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getImage()
 	 */
 	@Override
@@ -152,7 +151,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method updateDisplay()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#updateDisplay(boolean)
 	 */
 	@Override
@@ -189,10 +188,10 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method resizeImage()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#resizeImage(int, int, boolean)
 	 */
-//	@Override
+	// @Override
 	public boolean resizeImage(final int x, final int y, final boolean force) {
 		return true;
 	}
@@ -209,31 +208,29 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method zoomIn()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#zoomIn()
 	 */
 	@Override
 	public void zoomIn() {
-		if (renderer.data.cameraInteractionDisabled())
-			return;
+		if (renderer.data.cameraInteractionDisabled()) { return; }
 		renderer.camera.zoom(true);
 	}
 
 	/**
 	 * Method zoomOut()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#zoomOut()
 	 */
 	@Override
 	public void zoomOut() {
-		if (renderer.data.cameraInteractionDisabled())
-			return;
+		if (renderer.data.cameraInteractionDisabled()) { return; }
 		renderer.camera.zoom(false);
 	}
 
 	/**
 	 * Method zoomFit()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#zoomFit()
 	 */
 	@Override
@@ -249,7 +246,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getManager()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getManager()
 	 */
 	@Override
@@ -259,7 +256,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method focusOn()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#focusOn(msi.gama.metamodel.shape.IShape)
 	 */
 	@Override
@@ -274,7 +271,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method waitForUpdateAndRun()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#waitForUpdateAndRun(java.lang.Runnable)
 	 */
 	@Override
@@ -291,7 +288,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getWidth()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getWidth()
 	 */
 	@Override
@@ -302,7 +299,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getHeight()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getHeight()
 	 */
 	@Override
@@ -313,14 +310,15 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method outputReloaded()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#outputReloaded()
 	 */
 	@Override
 	public void outputReloaded() {
 		setDisplayScope(output.getScope().copy("in OpenGLDisplaySurface"));
-		if (!GamaPreferences.Runtime.ERRORS_IN_DISPLAYS.getValue())
+		if (!GamaPreferences.Runtime.ERRORS_IN_DISPLAYS.getValue()) {
 			getScope().disableErrorReporting();
+		}
 		renderer.initScene();
 		layerManager.outputChanged();
 
@@ -332,7 +330,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method addMouseListener()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#addMouseListener(java.awt.event.MouseListener)
 	 */
 	@Override
@@ -342,7 +340,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method removeMouseListener()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#removeMouseListener(java.awt.event.MouseListener)
 	 */
 	@Override
@@ -358,7 +356,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getEnvWidth()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getEnvWidth()
 	 */
 	@Override
@@ -368,7 +366,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getEnvHeight()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getEnvHeight()
 	 */
 	@Override
@@ -378,11 +376,11 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getModelCoordinates()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getModelCoordinates()
 	 */
 	@Override
-	public ILocation getModelCoordinates() {
+	public GamaPoint getModelCoordinates() {
 		final Point mp = renderer.camera.getMousePosition();
 		if (mp == null) { return null; }
 		final GamaPoint p = renderer.getRealWorldPointFromWindowPoint(mp);
@@ -403,7 +401,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 			return;
 		}
 		// By default, returns the coordinates in the world.
-		final ILocation point = getModelCoordinates();
+		final GamaPoint point = getModelCoordinates();
 		final String x = point == null ? "N/A" : String.format("%8.2f", point.getX());
 		final String y = point == null ? "N/A" : String.format("%8.2f", point.getY());
 		final Object[] objects = new Object[] { x, y };
@@ -419,10 +417,10 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 			final Point origin = new Point(0, 0);
 			int xc = -origin.x;
 			int yc = -origin.y;
-			e.expandToInclude((GamaPoint) currentLayer.getModelCoordinatesFrom(xc, yc, this));
+			e.expandToInclude(currentLayer.getModelCoordinatesFrom(xc, yc, this));
 			xc = xc + renderer.getDrawable().getSurfaceWidth();
 			yc = yc + renderer.getDrawable().getSurfaceHeight();
-			e.expandToInclude((GamaPoint) currentLayer.getModelCoordinatesFrom(xc, yc, this));
+			e.expandToInclude(currentLayer.getModelCoordinatesFrom(xc, yc, this));
 			currentLayer.getData().setVisibleRegion(e);
 		}
 		return e;
@@ -430,11 +428,11 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getModelCoordinatesFrom()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getModelCoordinatesFrom(int, int, java.awt.Point, java.awt.Point)
 	 */
 	@Override
-	public ILocation getModelCoordinatesFrom(final int xOnScreen, final int yOnScreen, final Point sizeInPixels,
+	public GamaPoint getModelCoordinatesFrom(final int xOnScreen, final int yOnScreen, final Point sizeInPixels,
 			final Point positionInPixels) {
 		final Point mp = new Point(xOnScreen, yOnScreen);
 		final GamaPoint p = renderer.getRealWorldPointFromWindowPoint(mp);
@@ -443,19 +441,19 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method selectAgent()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#selectAgent(int, int)
 	 */
 	@Override
 	public Collection<IAgent> selectAgent(final int x, final int y) {
-		final ILocation pp = getModelCoordinatesFrom(x, y, null, null);
+		final GamaPoint pp = getModelCoordinatesFrom(x, y, null, null);
 		return scope.getRoot().getTopology().getNeighborsOf(scope, new GamaPoint(pp.getX(), pp.getY()),
 				renderer.getMaxEnvDim() / 100, Different.with());
 	}
 
 	/**
 	 * Method followAgent()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#followAgent(msi.gama.metamodel.agent.IAgent)
 	 */
 	@Override
@@ -466,7 +464,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getZoomLevel()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getZoomLevel()
 	 */
 	@Override
@@ -484,7 +482,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getDisplayScope()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getDisplayScope()
 	 */
 	@Override
@@ -494,7 +492,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getOutput()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getOutput()
 	 */
 	@Override
@@ -504,7 +502,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method setPaused()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface.OpenGL#setPaused(boolean)
 	 */
 	@Override
@@ -520,14 +518,14 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method selectAgents()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface.OpenGL#selectAgents(msi.gama.metamodel.agent.IAgent)
 	 */
 	@Override
 	public void selectAgent(final DrawingAttributes attributes) {
 		IAgent ag = null;
 		boolean withHighlight = true;
-		if (attributes != null)
+		if (attributes != null) {
 			if (attributes.getSpeciesName() != null) {
 				// The picked image is a grid or an image of a grid
 				withHighlight = false;
@@ -537,20 +535,23 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 						new GamaPoint(pickedPoint.x, -pickedPoint.y));
 			} else {
 				final IAgent id = attributes.getAgentIdentifier();
-				if (id != null)
+				if (id != null) {
 					ag = attributes.getAgentIdentifier();
+				}
 			}
-		if (withHighlight)
+		}
+		if (withHighlight) {
 			menuManager.buildMenu(renderer.camera.getMousePosition().x, renderer.camera.getMousePosition().y, ag,
 					cleanup, AgentsMenu.getHighlightActionFor(ag));
-		else
+		} else {
 			menuManager.buildMenu(renderer.camera.getMousePosition().x, renderer.camera.getMousePosition().y, ag,
 					cleanup);
+		}
 	}
 
 	/**
 	 * Method selectSeveralAgents()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface.OpenGL#selectSeveralAgents(java.util.Collection, int)
 	 */
 	@Override
@@ -622,13 +623,12 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method changed()
-	 * 
+	 *
 	 * @see msi.gama.outputs.LayeredDisplayData.DisplayDataListener#changed(int, boolean)
 	 */
 	@Override
 	public void changed(final Changes property, final Object value) {
-		if (renderer == null || renderer.camera == null) // Init
-			return;
+		if (renderer == null || renderer.camera == null) { return; }
 		switch (property) {
 
 			case CHANGE_CAMERA:
@@ -669,7 +669,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method setSize()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#setSize(int, int)
 	 */
 	@Override
@@ -694,7 +694,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	/**
 	 * Method getFPS()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getFPS()
 	 */
 	@Override
@@ -712,8 +712,9 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	@Override
 	public boolean isRendered() {
-		if (renderer == null || renderer.sceneBuffer == null || renderer.sceneBuffer.getSceneToRender() == null)
+		if (renderer == null || renderer.sceneBuffer == null || renderer.sceneBuffer.getSceneToRender() == null) {
 			return false;
+		}
 		return renderer.sceneBuffer.getSceneToRender().rendered();
 	}
 
@@ -739,7 +740,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 		final Point p = renderer.camera.getMousePosition();
 		final int x = p.x;
 		final int y = p.y;
-		for (final IEventLayerListener gl : listeners)
+		for (final IEventLayerListener gl : listeners) {
 			switch (swtMouseEvent) {
 				case SWT.MouseDown:
 					gl.mouseDown(x, y, 1);
@@ -757,6 +758,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 					gl.mouseExit(x, y);
 					break;
 			}
+		}
 	}
 
 	@Override

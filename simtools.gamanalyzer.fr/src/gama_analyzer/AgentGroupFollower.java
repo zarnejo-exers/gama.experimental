@@ -486,7 +486,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 
 	@setter ("allSimShape")
 	public void setAllSimulationShape(final List<IShape> allSimulationMultiPoly) {
-		this.allSimulationShape = allSimulationShape;
+		this.allSimulationShape = allSimulationMultiPoly;
 	}
 
 	@getter ("colorList")

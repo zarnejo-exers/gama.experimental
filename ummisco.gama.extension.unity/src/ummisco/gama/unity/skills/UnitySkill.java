@@ -19,7 +19,7 @@ import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.agent.MinimalAgent;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -1021,7 +1021,7 @@ public class UnitySkill extends NetworkSkill {
 	}
 
 	@setter (IUnitySkill.UNITY_LOCATION)
-	public void setUnityLocation(final IAgent agent, ILocation p) {
+	public void setUnityLocation(final IAgent agent, GamaPoint p) {
 		if (agent == null) { return; }
 		agent.setAttribute(IUnitySkill.UNITY_LOCATION, p);
 		if (isAgentCreatedInUnity(agent)) {
@@ -1091,7 +1091,7 @@ public class UnitySkill extends NetworkSkill {
 	}
 
 	@setter (IUnitySkill.UNITY_SCALE)
-	public void setScale(final IAgent agent, final ILocation p) {
+	public void setScale(final IAgent agent, final GamaPoint p) {
 		if (agent == null) { return; }
 		agent.setAttribute(IUnitySkill.UNITY_SCALE, p);
 		if (isAgentCreatedInUnity(agent)) {

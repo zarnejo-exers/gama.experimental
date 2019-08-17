@@ -318,9 +318,9 @@ public class Agglomerate extends Particle {
 				if (templates.containsKey(temp.getTemplateName())) {
 					final Integer count = nbFractalWithTemplate.get(temp.getTemplateName());
 					nbFractalWithTemplate.remove(temp.getTemplateName());
-					nbFractalWithTemplate.put(temp.getTemplateName(), new Integer(count.intValue() - 1));
+					nbFractalWithTemplate.put(temp.getTemplateName(), (count.intValue() - 1));
 				} else {
-					nbFractalWithTemplate.put(temp.getTemplateName(), new Integer(-1));
+					nbFractalWithTemplate.put(temp.getTemplateName(), (-1));
 					templates.put(temp.getTemplateName(), temp);
 				}
 			}
@@ -336,9 +336,9 @@ public class Agglomerate extends Particle {
 						if (templates.containsKey(tempName)) {
 							final Integer count = nbFractalWithTemplate.get(tempName);
 							nbFractalWithTemplate.remove(tempName);
-							nbFractalWithTemplate.put(tempName, new Integer(count.intValue() + 1));
+							nbFractalWithTemplate.put(tempName, (count.intValue() + 1));
 						} else {
-							nbFractalWithTemplate.put(tempName, new Integer(1));
+							nbFractalWithTemplate.put(tempName, (1));
 							templates.put(tempName, ((Agglomerate) p).getTemplate());
 						}
 					}

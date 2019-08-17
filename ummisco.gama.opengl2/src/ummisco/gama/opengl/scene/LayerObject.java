@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.GL3;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.common.interfaces.IKeyword;
@@ -216,7 +216,7 @@ public class LayerObject {
 		final IScope scope = renderer.getSurface().getScope();
 		final IExpression expr = layer.getDefinition().getFacet(IKeyword.SIZE);
 		if (expr != null) {
-			scale = (GamaPoint) Cast.asPoint(scope, expr.value(scope));
+			scale = Cast.asPoint(scope, expr.value(scope));
 			if (scale.x <= 1) {
 				scale.x *= renderer.getEnvWidth();
 			}
