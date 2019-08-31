@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 
-import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
-import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.ast.ISyntacticElement;
 import msi.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
 import msi.gaml.types.Types;
+import ummisco.gama.file.gaml.GamlResourceInfoProvider;
+import ummisco.gama.gaml.indexer.GamlResourceIndexer;
 import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
 
 public class GamlToUMLConverter {
@@ -38,9 +38,10 @@ public class GamlToUMLConverter {
 	 *            {@code WrappedGamaFile} the Wrapped Gama File containing the model
 	 */
 	public GamlToUMLConverter(final WrappedGamaFile modelFile, final boolean light) {
-		this.model = GAML.getContents(URI.createURI(modelFile.getResource().getLocationURI().toString()));
-		importedModelsURIs =
-				GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
+		this.model = GamlResourceInfoProvider.INSTANCE
+				.getContents(URI.createURI(modelFile.getResource().getLocationURI().toString()));
+		importedModelsURIs = GamlResourceIndexer.INSTANCE
+				.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
 		umlText = new XMLStringBuilder();
 		species = new HashMap<>();
 		attributes = new HashMap<>();
@@ -81,7 +82,7 @@ public class GamlToUMLConverter {
 
 		while (importedModelsURIs.hasNext()) {
 			final URI tmpUri = importedModelsURIs.next();
-			final ISyntacticElement tmpModel = GAML.getContents(tmpUri);
+			final ISyntacticElement tmpModel = GamlResourceInfoProvider.INSTANCE.getContents(tmpUri);
 			tmpModel.visitSpecies(visitorForSpecies);
 			tmpModel.visitGrids(visitorForSpecies);
 		}
@@ -91,28 +92,32 @@ public class GamlToUMLConverter {
 
 	public String getIdSpecies(final String name) {
 		for (final String aKey : species.keySet()) {
-			if (species.get(aKey).getName().equals(name)) { return aKey; }
+			if (species.get(aKey).getName().equals(name))
+				return aKey;
 		}
 		return "";
 	}
 
 	public String getIdAttributeFromAssociation(final String species, final String name) {
 		for (final String aKey : attributes.get(species).keySet()) {
-			if (attributes.get(species).get(aKey).getName().equals(name)) { return aKey; }
+			if (attributes.get(species).get(aKey).getName().equals(name))
+				return aKey;
 		}
 		return "";
 	}
 
 	public String getIdAssociationFromAttribute(final String species, final String name) {
 		for (final String aKey : associations.get(species).keySet()) {
-			if (associations.get(species).get(aKey).getName().equals(name)) { return aKey; }
+			if (associations.get(species).get(aKey).getName().equals(name))
+				return aKey;
 		}
 		return "";
 	}
 
 	public String getIdParent(final String name) {
 		// System.out.println("Looking for parent of : "+name);
-		if (generalizations.containsKey(name)) { return getIdSpecies(generalizations.get(name)); }
+		if (generalizations.containsKey(name))
+			return getIdSpecies(generalizations.get(name));
 		return "";
 	}
 

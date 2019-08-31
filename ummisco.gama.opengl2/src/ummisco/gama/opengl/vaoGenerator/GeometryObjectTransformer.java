@@ -12,12 +12,13 @@ package ummisco.gama.opengl.vaoGenerator;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.google.common.base.MoreObjects;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.ShapeType;
+
+import com.google.common.base.MoreObjects;
 
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
 import ummisco.gama.modernOpenGL.DrawingEntity;
 import ummisco.gama.opengl.scene.GeometryObject;
 import ummisco.gama.opengl.utils.Utils;
@@ -118,7 +119,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	@Override
 	protected void correctBorders() {
 		super.correctBorders();
-		if (type == IShape.Type.CONE) {
+		if (type == ShapeType.CONE) {
 			final ArrayList<Float> listIdx = new ArrayList<>();
 			for (final float idx : idxForBorder) {
 				if (idx / BUILT_IN_SHAPE_RESOLUTION - 1 > 0.1) {
@@ -136,12 +137,12 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	@Override
 	protected void computeUVMapping() {
 		super.computeUVMapping();
-		if (false && (type == IShape.Type.CONE || type == IShape.Type.CYLINDER || type == IShape.Type.SPHERE)) {
+		if (false && (type == ShapeType.CONE || type == ShapeType.CYLINDER || type == ShapeType.SPHERE)) {
 			// special case for cone, cylinder and sphere
 			int resolution = BUILT_IN_SHAPE_RESOLUTION; // 32 vertex of
 														// resolution for those
 														// shapes
-			if (type == IShape.Type.CYLINDER) {
+			if (type == ShapeType.CYLINDER) {
 				for (int i = 2 * resolution; i < 4 * resolution; i++) {
 					if (i < 3 * resolution) {
 						// bottom uv mapping
@@ -158,7 +159,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 					}
 					uvMapping[i * 2] = uCoords;
 				}
-			} else if (type == IShape.Type.CONE) { // 0 --> 32 : vertices for
+			} else if (type == ShapeType.CONE) { // 0 --> 32 : vertices for
 													// the base of the cone. 33
 													// : vertex for the summit.
 													// 32 --> 64 : vertices for
@@ -176,7 +177,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 				}
 				uvMapping[resolution * 2] = 0.5f;
 				uvMapping[resolution * 2 + 1] = 1;
-			} else if (type == IShape.Type.SPHERE) {
+			} else if (type == ShapeType.SPHERE) {
 				resolution = BUILT_IN_SHAPE_RESOLUTION / 2;
 				for (int i = 0; i < (resolution - 1) * (resolution - 1); i++) {
 					uvMapping[i * 2] = (float) (i % resolution) / (float) (resolution - 1);
@@ -236,27 +237,28 @@ class GeometryObjectTransformer extends AbstractTransformer {
 		// a pyramid geometry is either a 3D cone or a pyramid (made with a
 		// base, a summit and
 		// generated lateral faces)
-		if (type == IShape.Type.CONE && depth > 0 || type == IShape.Type.PYRAMID) { return true; }
+		if (type == ShapeType.CONE && depth > 0 || type == ShapeType.PYRAMID)
+			return true;
 		return false;
 	}
 
 	private boolean isSphere() {
-		return type == IShape.Type.SPHERE;
+		return type == ShapeType.SPHERE;
 	}
 
 	private boolean is1DShape() {
 		// a 1D shape is a line, polyline or point. It cannot have a border, and
 		// it does not have faces
-		if (type == IShape.Type.POINT || type == IShape.Type.LINEARRING || type == IShape.Type.LINESTRING) {
+		if (type == ShapeType.POINT || type == ShapeType.LINEARRING || type == ShapeType.LINESTRING)
 			return true;
-		}
 		return false;
 	}
 
 	private boolean isPolyplan() {
 		// a plan / polyplan are a bit particular : they are build out of a
 		// line, and the depth attribute gives the height of the plan.
-		if (type == IShape.Type.PLAN || type == IShape.Type.POLYPLAN) { return true; }
+		if (type == ShapeType.PLAN || type == ShapeType.POLYPLAN)
+			return true;
 		return false;
 	}
 
@@ -544,7 +546,8 @@ class GeometryObjectTransformer extends AbstractTransformer {
 
 	@Override
 	public ArrayList<DrawingEntity> getDrawingEntityList() {
-		if (geometryCorrupted) { return new ArrayList<>(); }
+		if (geometryCorrupted)
+			return new ArrayList<>();
 		// returns the DrawingEntities corresponding to this shape (can be 2
 		// DrawingEntities
 		// in case it has been asked to draw the border)

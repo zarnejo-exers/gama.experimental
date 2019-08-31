@@ -12,23 +12,16 @@ package ummisco.gama.opengl;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.events.MenuListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
+import org.locationtech.jts.geom.Envelope;
 
 import com.jogamp.opengl.GLAnimatorControl;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
-import org.locationtech.jts.geom.Envelope;
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.interfaces.IDisplaySurface;
@@ -53,8 +46,6 @@ import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
 import msi.gaml.statements.draw.DrawingAttributes;
 import ummisco.gama.ui.menus.AgentsMenu;
-import ummisco.gama.ui.resources.GamaIcons;
-import ummisco.gama.ui.resources.IGamaIcons;
 import ummisco.gama.ui.utils.WorkbenchHelper;
 import ummisco.gama.ui.views.displays.DisplaySurfaceMenu;
 
@@ -136,7 +127,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 			}
 		}
 		final GLAutoDrawable glad = renderer.getDrawable();
-		if (glad == null || glad.getGL() == null || glad.getGL().getContext() == null) { return null; }
+		if (glad == null || glad.getGL() == null || glad.getGL().getContext() == null)
+			return null;
 		final boolean current = glad.getGL().getContext().isCurrent();
 		if (!current) {
 			glad.getGL().getContext().makeCurrent();
@@ -157,7 +149,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	@Override
 	public void updateDisplay(final boolean force) {
 
-		if (alreadyUpdating) { return; }
+		if (alreadyUpdating)
+			return;
 		try {
 			alreadyUpdating = true;
 
@@ -213,7 +206,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	 */
 	@Override
 	public void zoomIn() {
-		if (renderer.data.cameraInteractionDisabled()) { return; }
+		if (renderer.data.cameraInteractionDisabled())
+			return;
 		renderer.camera.zoom(true);
 	}
 
@@ -224,7 +218,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	 */
 	@Override
 	public void zoomOut() {
-		if (renderer.data.cameraInteractionDisabled()) { return; }
+		if (renderer.data.cameraInteractionDisabled())
+			return;
 		renderer.camera.zoom(false);
 	}
 
@@ -382,9 +377,11 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	@Override
 	public GamaPoint getModelCoordinates() {
 		final Point mp = renderer.camera.getMousePosition();
-		if (mp == null) { return null; }
+		if (mp == null)
+			return null;
 		final GamaPoint p = renderer.getRealWorldPointFromWindowPoint(mp);
-		if (p == null) { return null; }
+		if (p == null)
+			return null;
 		return new GamaPoint(p.x, -p.y);
 	}
 
@@ -410,7 +407,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	@Override
 	public Envelope getVisibleRegionForLayer(final ILayer currentLayer) {
-		if (currentLayer instanceof OverlayLayer) { return getScope().getSimulation().getEnvelope(); }
+		if (currentLayer instanceof OverlayLayer)
+			return getScope().getSimulation().getEnvelope();
 		Envelope e = currentLayer.getData().getVisibleRegion();
 		if (e == null) {
 			e = new Envelope();
@@ -476,7 +474,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	}
 
 	protected Double computeInitialZoomLevel() {
-		if (renderer.camera == null) { return 1.0; }
+		if (renderer.camera == null)
+			return 1.0;
 		return renderer.camera.zoomLevel();
 	}
 
@@ -557,38 +556,38 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	@Override
 	public void selectionIn(final Envelope3D env) {
 
-		final Envelope3D envInWorld = Envelope3D.withYNegated(env);
-		final Collection<IAgent> agents = scope.getTopology().getSpatialIndex().allInEnvelope(scope,
-				envInWorld.centre(), envInWorld, new Different(), false);
-		final Map<String, Runnable> actions = new LinkedHashMap<>();
-		final Map<String, Image> images = new HashMap<>();
-		images.put(renderer.camera.isROISticky() ? "Hide region" : "Keep region visible",
-				GamaIcons.create(IGamaIcons.MENU_FOLLOW).image());
-		images.put("Focus on region", GamaIcons.create(IGamaIcons.DISPLAY_TOOLBAR_ZOOMFIT).image());
-		actions.put(renderer.camera.isROISticky() ? "Hide region" : "Keep region visible",
-				() -> renderer.camera.toggleStickyROI());
-		actions.put("Focus on region", () -> renderer.camera.zoomRoi(env));
-		WorkbenchHelper.run(() -> {
-			final Menu menu = menuManager.buildROIMenu(renderer.camera.getMousePosition().x,
-					renderer.camera.getMousePosition().y, agents, actions, images);
-			menu.addMenuListener(new MenuListener() {
-
-				@Override
-				public void menuHidden(final MenuEvent e) {
-					animator.resume();
-					// Will be run after the selection
-					WorkbenchHelper.asyncRun(() -> renderer.cancelROI());
-
-				}
-
-				@Override
-				public void menuShown(final MenuEvent e) {
-					animator.pause();
-				}
-			});
-
-			menu.setVisible(true);
-		});
+		// final Envelope3D envInWorld = Envelope3D.withYNegated(env);
+		// final Collection<IAgent> agents = scope.getTopology().getSpatialIndex().allInEnvelope(scope,
+		// envInWorld.centre(), envInWorld, new Different(), false);
+		// final Map<String, Runnable> actions = new LinkedHashMap<>();
+		// final Map<String, Image> images = new HashMap<>();
+		// images.put(renderer.camera.isROISticky() ? "Hide region" : "Keep region visible",
+		// GamaIcons.create(IGamaIcons.MENU_FOLLOW).image());
+		// images.put("Focus on region", GamaIcons.create(IGamaIcons.DISPLAY_TOOLBAR_ZOOMFIT).image());
+		// actions.put(renderer.camera.isROISticky() ? "Hide region" : "Keep region visible",
+		// () -> renderer.camera.toggleStickyROI());
+		// actions.put("Focus on region", () -> renderer.camera.zoomRoi(env));
+		// WorkbenchHelper.run(() -> {
+		// final Menu menu = menuManager.buildROIMenu(renderer.camera.getMousePosition().x,
+		// renderer.camera.getMousePosition().y, agents, actions, images);
+		// menu.addMenuListener(new MenuListener() {
+		//
+		// @Override
+		// public void menuHidden(final MenuEvent e) {
+		// animator.resume();
+		// // Will be run after the selection
+		// WorkbenchHelper.asyncRun(() -> renderer.cancelROI());
+		//
+		// }
+		//
+		// @Override
+		// public void menuShown(final MenuEvent e) {
+		// animator.pause();
+		// }
+		// });
+		//
+		// menu.setVisible(true);
+		// });
 
 	}
 
@@ -601,7 +600,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	@Override
 	public void dispose() {
-		if (disposed) { return; }
+		if (disposed)
+			return;
 		disposed = true;
 		if (layerManager != null) {
 			layerManager.dispose();
@@ -628,7 +628,8 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	 */
 	@Override
 	public void changed(final Changes property, final Object value) {
-		if (renderer == null || renderer.camera == null) { return; }
+		if (renderer == null || renderer.camera == null)
+			return;
 		switch (property) {
 
 			case CHANGE_CAMERA:
@@ -704,17 +705,18 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	@Override
 	public boolean isRealized() {
-		if (renderer == null) { return false; }
+		if (renderer == null)
+			return false;
 		final GLAutoDrawable d = renderer.getDrawable();
-		if (d == null) { return false; }
+		if (d == null)
+			return false;
 		return d.isRealized();
 	}
 
 	@Override
 	public boolean isRendered() {
-		if (renderer == null || renderer.sceneBuffer == null || renderer.sceneBuffer.getSceneToRender() == null) {
+		if (renderer == null || renderer.sceneBuffer == null || renderer.sceneBuffer.getSceneToRender() == null)
 			return false;
-		}
 		return renderer.sceneBuffer.getSceneToRender().rendered();
 	}
 

@@ -1,6 +1,6 @@
 /*********************************************************************************************
  *
- * 'INetworkSkill.java, in plugin ummisco.gama.network, is part of the source code of the
+ * 'INetworkSkill.java, in plugin ummisco.gama.extensions.network, is part of the source code of the
  * GAMA modeling and simulation platform.
  * (c) 2007-2018 UMI 209 UMMISCO IRD/UPMC & Partners
  *

@@ -18,11 +18,10 @@ import msi.gama.common.interfaces.ILayer;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IMap;
-import msi.gama.util.file.GamaGeometryFile;
-import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
-import msi.gaml.statements.draw.DrawingAttributes;
+import ummisco.gama.file.GamaGeometryFile;
+import ummisco.gama.file.GamaImageFile;
 import ummisco.gama.opengl.Abstract3DRenderer;
 
 /**
@@ -123,7 +122,8 @@ public class ModelScene {
 	}
 
 	private double computeVisualZIncrement() {
-		if (objectNumber == 0) { return 0d; }
+		if (objectNumber == 0)
+			return 0d;
 		// The maximum visual z allowance between the object at the bottom and the one at the top
 		final double maxZ = renderer.getMaxEnvDim() / 2000d;
 		// The increment is simply
@@ -131,7 +131,8 @@ public class ModelScene {
 	}
 
 	public boolean cannotAdd() {
-		if (currentLayer == null) { return true; }
+		if (currentLayer == null)
+			return true;
 		return currentLayer.isStatic() && currentLayer.isLocked();
 	}
 
@@ -141,32 +142,38 @@ public class ModelScene {
 	}
 
 	public StringObject addString(final String string, final DrawingAttributes attributes) {
-		if (cannotAdd()) { return null; }
+		if (cannotAdd())
+			return null;
 		return configure(currentLayer.addString(string, attributes));
 	}
 
 	public GeometryObject addImageFile(final GamaImageFile file, final DrawingAttributes attributes) {
-		if (cannotAdd()) { return null; }
+		if (cannotAdd())
+			return null;
 		return configure(currentLayer.addImage(file, attributes));
 	}
 
 	public ResourceObject addGeometryFile(final GamaGeometryFile file, final DrawingAttributes attributes) {
-		if (cannotAdd()) { return null; }
+		if (cannotAdd())
+			return null;
 		return configure(currentLayer.addFile(file, attributes));
 	}
 
 	public GeometryObject addImage(final BufferedImage img, final DrawingAttributes attributes) {
-		if (cannotAdd()) { return null; }
+		if (cannotAdd())
+			return null;
 		return configure(currentLayer.addImage(img, attributes));
 	}
 
 	public GeometryObject addGeometry(final Geometry geometry, final DrawingAttributes attributes) {
-		if (cannotAdd()) { return null; }
+		if (cannotAdd())
+			return null;
 		return configure(currentLayer.addGeometry(geometry, attributes));
 	}
 
 	public FieldObject addField(final double[] fieldValues, final FieldDrawingAttributes attributes) {
-		if (cannotAdd()) { return null; }
+		if (cannotAdd())
+			return null;
 		return configure(currentLayer.addField(fieldValues, attributes));
 	}
 

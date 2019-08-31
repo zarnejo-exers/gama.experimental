@@ -16,12 +16,12 @@ import java.util.HashMap;
 
 import com.google.common.base.MoreObjects;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.ShapeType;
 
 import msi.gama.common.geometry.AxisAngle;
 import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
-import msi.gama.metamodel.shape.IShape.Type;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaMaterial;
 import msi.gama.util.GamaPair;
@@ -72,7 +72,7 @@ abstract class AbstractTransformer {
 
 	// private fields from the GeometryObject
 	protected int pickingId;
-	protected IShape.Type type;
+	protected ShapeType type;
 	protected double depth;
 	protected GamaPoint translation;
 	protected GamaPair<Double, GamaPoint> rotation;
@@ -440,7 +440,7 @@ abstract class AbstractTransformer {
 			}
 			faceIsClockwise[i] = Utils.isClockwise(coordsOfFace);
 		}
-		if (type.equals(Type.SPHERE)) {
+		if (type.equals(ShapeType.SPHERE)) {
 			faceIsClockwise = new boolean[0];
 		}
 

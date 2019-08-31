@@ -13,8 +13,8 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
-import ummisco.gama.network.common.Connector;
-import ummisco.gama.network.common.GamaNetworkException;
+import ummisco.gama.extensions.network.common.Connector;
+import ummisco.gama.extensions.network.common.GamaNetworkException;
 
 public class MQTTUnityConnector extends Connector {
 

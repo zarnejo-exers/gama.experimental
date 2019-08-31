@@ -10,8 +10,9 @@ Require-Bundle: msi.gama.ext,
  org.eclipse.ui;bundle-version="3.8.2",
  ummisco.gama.ui.shared,
  ummisco.gama.ui.experiment;bundle-version="1.7.0",
- msi.gama.application;bundle-version="1.7.0",
- com.google.guava
+ ummisco.gama.application;bundle-version="1.7.0",
+ com.google.guava,
+ ummisco.gama.extensions.files
 Bundle-ActivationPolicy: lazy
 Import-Package: org.locationtech.jts.geom,
  org.apache.commons.lang;version="2.6.0",

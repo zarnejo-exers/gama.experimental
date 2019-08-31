@@ -1,19 +1,5 @@
 package gamrGenerator;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -31,21 +17,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
-import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import jobs.JobDocumentation; 
+import jobs.JobDocumentation;
 import jobs.JobDocumentationProject;
-import msi.gama.runtime.GAMA;
-import msi.gama.util.file.GamlFileInfo;
 import msi.gama.util.file.IGamaFileMetaData;
-import ummisco.gama.ui.navigator.NavigatorLabelProvider;
-import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
+import ummisco.gama.file.gaml.GamlFileInfo;
+import ummisco.gama.file.metadata.FileMetaDataProvider;
 import ummisco.gama.ui.navigator.contents.WrappedProject;
 import ummisco.gama.ui.navigator.contents.WrappedResource;
 
 /**
- * 
+ *
  * @author damienphilippon Date : 19 Dec 2017 Class used go handle the command
  */
 public class GenerateGamrHandler extends AbstractHandler {
@@ -59,11 +42,12 @@ public class GenerateGamrHandler extends AbstractHandler {
 	/**
 	 * Method that will execute the job (will ask for a location)
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Override
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
-		String model="";
-		String exp="";
+		String model = "";
+		String exp = "";
 		if (selection != null & selection instanceof IStructuredSelection) {
 
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
@@ -74,15 +58,15 @@ public class GenerateGamrHandler extends AbstractHandler {
 				Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
 				final IContainer p = ResourcesPlugin.getWorkspace().getRoot();
 				dialog = new FilteredResourcesSelectionDialog(shell, false, p, Resource.FILE);
-				dialog.setInitialPattern(file_to_convert.getProject().getName()+"/*.gaml");
+				dialog.setInitialPattern(file_to_convert.getProject().getName() + "/*.gaml");
 				dialog.setTitle("Choose a gaml model in project " + file_to_convert.getProject().getName());
 				if (dialog.open() == Window.OK) {
 					final Object[] result = dialog.getResult();
 					if (result.length == 1) {
 						final IResource res = (IResource) result[0];
-						model=res.getFullPath().toString();
+						model = res.getFullPath().toString();
 						System.out.println(res.getFullPath().toString());
-						final IGamaFileMetaData data = GAMA.getGui().getMetaDataProvider().getMetaData(res, false, true);
+						final IGamaFileMetaData data = FileMetaDataProvider.getInstance().getMetaData(res, false, true);
 						if (data != null && data instanceof GamlFileInfo) {
 							LabelProvider ss = new LabelProvider();
 							ElementListSelectionDialog l = new ElementListSelectionDialog(shell, ss);
@@ -91,9 +75,9 @@ public class GenerateGamrHandler extends AbstractHandler {
 							int rres = l.open();
 							if (rres == Window.OK) {
 								Object[] objs = l.getResult();
-								exp=objs[0].toString();
+								exp = objs[0].toString();
 								System.out.println(objs[0]);
-							} 
+							}
 						}
 
 					}
@@ -108,10 +92,11 @@ public class GenerateGamrHandler extends AbstractHandler {
 					directorySelector
 							.setFilterPath(file_to_convert.getProject().getResource().getLocation().toOSString());
 					String selectedDirectoryName = directorySelector.open();
-					myJob = new JobDocumentationProject(((WrappedProject) o).getResource(), selectedDirectoryName,model,exp);
-					myJob.run(new NullProgressMonitor() );
-//					myJob.setUser(true);
-//					myJob.schedule();
+					myJob = new JobDocumentationProject(((WrappedProject) o).getResource(), selectedDirectoryName,
+							model, exp);
+					myJob.run(new NullProgressMonitor());
+					// myJob.setUser(true);
+					// myJob.schedule();
 				}
 				// else
 				// {

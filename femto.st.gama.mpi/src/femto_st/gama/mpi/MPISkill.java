@@ -1,5 +1,6 @@
 package femto_st.gama.mpi;
 
+import irit.gama.extensions.serialize.factory.StreamConverter;
 import mpi.MPI;
 import mpi.MPIException;
 import msi.gama.precompiler.GamlAnnotations.action;
@@ -14,7 +15,6 @@ import msi.gama.runtime.IScope;
 import msi.gama.util.IList;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
-import ummisco.gama.serializer.factory.StreamConverter;
 
 @vars ({ @variable (
 		name = IMPISkill.MPI_RANK,

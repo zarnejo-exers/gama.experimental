@@ -25,7 +25,7 @@ import markdownSyntactic.IParser;
 import markdownSyntactic.LightModel;
 import markdownSyntactic.MarkdownModelDocumentor;
 import markdownSyntactic.MarkdownTools;
-import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
+import ummisco.gama.gaml.indexer.GamlResourceIndexer;
 import ummisco.gama.ui.navigator.contents.WrappedFolder;
 import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
 import ummisco.gama.ui.navigator.contents.WrappedProject;
@@ -188,8 +188,8 @@ public abstract class JobDocumentation extends WorkspaceJob {
 	public void generateForWrappedGamaFile(final WrappedGamaFile aFile) {
 
 		// Loop trough the imported models of the file and build the links between their species and the documentation
-		Iterator<URI> importedUris =
-				GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
+		Iterator<URI> importedUris = GamlResourceIndexer.INSTANCE
+				.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
 		while (importedUris.hasNext()) {
 			final URI tmpUri = importedUris.next();
 			if (modelsDone.contains(tmpUri.toString()) == false) {

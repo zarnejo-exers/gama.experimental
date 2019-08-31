@@ -2,6 +2,7 @@ package ummisco.gama.remote.gui.skill;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -17,7 +18,7 @@ public class SharedVariable {
 	public final static int EXPOSED_VARIABLE = 1;
 	public final static int LISTENED_VARIABLE = 2;
 
-	ArrayList<String> attributeName;
+	List<String> attributeName;
 	String exposedName;
 
 	int connectionType = -1;
@@ -40,8 +41,8 @@ public class SharedVariable {
 		this.update(agt.getScope());
 	}
 
-	SharedVariable(final IAgent agt, final ArrayList<String> names, final String exposedName,
-			final MQTTConnector connect, final int IO) throws MqttException {
+	SharedVariable(final IAgent agt, final IList<String> names, final String exposedName, final MQTTConnector connect,
+			final int IO) throws MqttException {
 		connection = connect; // new MQTTConnector(server,login,pass,exposedName,IO);
 		this.agent = agt;
 		this.attributeName = names;

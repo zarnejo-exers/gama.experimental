@@ -74,11 +74,11 @@ import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
 import msi.gama.util.IMap;
-import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.operators.Spatial;
 import msi.gaml.types.GamaGeometryType;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.file.GamaGeometryFile;
 
 /**
  * Written by drogoul Modified on 13 nov. 2011
@@ -112,10 +112,9 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 	public GamaPoint toPoint(final IfcDirection direction) {
 		if (direction != null) {
-			if (direction.getDirectionRatios().size() > 2) {
+			if (direction.getDirectionRatios().size() > 2)
 				return new GamaPoint(direction.getDirectionRatios().get(0).value,
 						direction.getDirectionRatios().get(1).value, direction.getDirectionRatios().get(2).value);
-			}
 			return new GamaPoint(direction.getDirectionRatios().get(0).value,
 					direction.getDirectionRatios().get(1).value);
 		}
@@ -124,10 +123,9 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 	public GamaPoint toPoint(final IfcCartesianPoint point) {
 		if (point != null) {
-			if (point.getCoordinates().size() > 2) {
+			if (point.getCoordinates().size() > 2)
 				return new GamaPoint(point.getCoordinates().get(0).value, point.getCoordinates().get(1).value,
 						point.getCoordinates().get(2).value);
-			}
 			return new GamaPoint(point.getCoordinates().get(0).value, point.getCoordinates().get(1).value);
 		}
 		return null;
@@ -243,7 +241,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 
 	public IShape createOpening(final IScope scope, final IfcOpeningElement o) {
-		if (o.getObjectPlacement() == null) { return null; }
+		if (o.getObjectPlacement() == null)
+			return null;
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, o.getObjectPlacement(), aps);
@@ -277,16 +276,19 @@ public class GamaIFCFile extends GamaGeometryFile {
 			final IfcObjectPlacement pla = ((IfcLocalPlacement) placement).getPlacementRelTo();
 			if (pla != null && pla.getPlacesObject_Inverse() != null) {
 				for (final IfcProduct p : pla.getPlacesObject_Inverse()) {
-					if (depths.containsKey(p)) { return depths.get(p); }
+					if (depths.containsKey(p))
+						return depths.get(p);
 				}
 			}
-			if (pla != null) { return defineDoorDepth(scope, pla, depths); }
+			if (pla != null)
+				return defineDoorDepth(scope, pla, depths);
 		}
 		return null;
 	}
 
 	public IShape createDoor(final IScope scope, final IfcDoor d, final Map<IfcProduct, Double> depths) {
-		if (d.getObjectPlacement() == null) { return null; }
+		if (d.getObjectPlacement() == null)
+			return null;
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, d.getObjectPlacement(), aps);
@@ -315,7 +317,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 
 	public IShape createWindow(final IScope scope, final IfcWindow d, final Map<IfcProduct, Double> depths) {
-		if (d.getObjectPlacement() == null) { return null; }
+		if (d.getObjectPlacement() == null)
+			return null;
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		final List<IfcObjectPlacement> ls = new ArrayList<>();
@@ -397,7 +400,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 	public IShape createWall(final IScope scope, final IfcWall w, final Map<IfcProduct, Double> depths) {
 		// String name = w.getName().toString();
-		if (w.getObjectPlacement() == null) { return null; }
+		if (w.getObjectPlacement() == null)
+			return null;
 
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
@@ -482,7 +486,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 
 	public IShape createSlab(final IScope scope, final IfcSlab s) {
-		if (s.getObjectPlacement() == null) { return null; }
+		if (s.getObjectPlacement() == null)
+			return null;
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, s.getObjectPlacement(), aps);
@@ -530,7 +535,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 
 	public IShape createSpace(final IScope scope, final IfcSpace s) {
-		if (s.getObjectPlacement() == null) { return null; }
+		if (s.getObjectPlacement() == null)
+			return null;
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, s.getObjectPlacement(), aps);
@@ -585,7 +591,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 	public void addAttribtutes(final IfcProduct product, final IShape shape) {
 		shape.setAttribute("type", product.getClass().getSimpleName());
-		if (product.getIsDefinedBy_Inverse() == null) { return; }
+		if (product.getIsDefinedBy_Inverse() == null)
+			return;
 		for (final IfcRelDefines rd : product.getIsDefinedBy_Inverse()) {
 			if (rd instanceof IfcRelDefinesByProperties) {
 				final IfcRelDefinesByProperties rlp = (IfcRelDefinesByProperties) rd;
@@ -613,7 +620,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 	@Override
 	protected void fillBuffer(final IScope scope) throws GamaRuntimeException {
-		if (getBuffer() != null) { return; }
+		if (getBuffer() != null)
+			return;
 		final IList<IShape> geoms = GamaListFactory.create(Types.GEOMETRY);
 
 		try {
@@ -736,7 +744,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 			fillBuffer(scope);
 			didFillBuffer = true;
 		}
-		if (getBuffer() == null) { return null; }
+		if (getBuffer() == null)
+			return null;
 		Envelope3D env = GeometryUtils.computeEnvelopeFrom(scope, getBuffer());
 		if (didFillBuffer) {
 			final GamaPoint vect = new GamaPoint(-env.getMinX(), -env.getMinY(), -env.getMinZ());

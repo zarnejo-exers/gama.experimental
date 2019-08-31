@@ -8,66 +8,55 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-import msi.gama.precompiler.GamlAnnotations.file;
 import msi.gama.runtime.GAMA;
-import ummisco.gama.ui.navigator.contents.WrappedResource;
-import ummisco.gama.ui.utils.SwtGui;
- 
+
 public class JobDocumentationProject extends JobDocumentation {
 
 	/**
 	 * The project concerned by this job
 	 */
 	public IProject project;
-	String model="";
-	String exp="";
+	String model = "";
+	String exp = "";
+
 	/**
-	 * Constructor using a given project (will be saved in a default documentation
-	 * folder )
-	 * 
+	 * Constructor using a given project (will be saved in a default documentation folder )
+	 *
 	 * @param project
 	 *            {@code IProject} the project to document
 	 */
-	public JobDocumentationProject(IProject project) {
+	public JobDocumentationProject(final IProject project) {
 		super(project.getLocation().toOSString());
 		this.project = project;
 	}
 
 	/**
-	 * Constructor using a given project (will be saved in a given documentation
-	 * folder )
-	 * 
+	 * Constructor using a given project (will be saved in a given documentation folder )
+	 *
 	 * @param project
 	 *            {@code IProject} the project to document
 	 * @param path
-	 *            {@code String} the path (String) in which the documentation will
-	 *            be saved
+	 *            {@code String} the path (String) in which the documentation will be saved
 	 */
-	public JobDocumentationProject(IProject project, String path, String m, String e) {
+	public JobDocumentationProject(final IProject project, final String path, final String m, final String e) {
 		super(path);
 		this.project = project;
-		model=m;
-		exp=e;
+		model = m;
+		exp = e;
 	}
 
-	public void pack(String sourceDirPath, String zipFilePath) throws IOException {
+	public void pack(final String sourceDirPath, final String zipFilePath) throws IOException {
 		System.out.println(System.getProperty("user.dir"));
 		Files.deleteIfExists(Paths.get(zipFilePath));
 		Path p = Files.createFile(Paths.get(zipFilePath));
@@ -85,18 +74,19 @@ public class JobDocumentationProject extends JobDocumentation {
 			});
 		}
 	}
-	public void saveIni(String dirPath) {
-		new File(dirPath+"/.metadata").mkdir();
 
-		final File ini = new File(dirPath+"/.metadata/launcher.ini"); 
+	public void saveIni(final String dirPath) {
+		new File(dirPath + "/.metadata").mkdir();
+
+		final File ini = new File(dirPath + "/.metadata/launcher.ini");
 		try {
 			final List<String> contents = new ArrayList<>();
 			if (ini != null) {
 				contents.add("-model");
-				contents.add(model.substring(project.getName().length()+2));
+				contents.add(model.substring(project.getName().length() + 2));
 				contents.add("-experiment");
 				contents.add(exp);
-				
+
 				try (final FileOutputStream os = new FileOutputStream(ini);
 						final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os));) {
 					for (final String line : contents) {
@@ -114,7 +104,8 @@ public class JobDocumentationProject extends JobDocumentation {
 	/**
 	 * Method to run the job in background
 	 */
-	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 		if (project != null) {
 
 			// WrappedResource file_to_convert =
@@ -122,10 +113,10 @@ public class JobDocumentationProject extends JobDocumentation {
 			// Object[] childrenResources = file_to_convert.getNavigatorChildren().clone();
 			try {
 				saveIni(project.getLocation().toOSString());
-				pack(project.getLocation().toOSString(), directory+"/" + project.getName() + ".gamr");
-				GAMA.getGui().tell("Gamr created!");
-				new File(project.getLocation().toOSString()+"/.metadata/launcher.ini").delete();
-				new File(project.getLocation().toOSString()+"/.metadata").delete();
+				pack(project.getLocation().toOSString(), directory + "/" + project.getName() + ".gamr");
+				GAMA.getGui().tell("GAMR", "Gamr created!");
+				new File(project.getLocation().toOSString() + "/.metadata/launcher.ini").delete();
+				new File(project.getLocation().toOSString() + "/.metadata").delete();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

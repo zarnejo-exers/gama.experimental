@@ -4,7 +4,7 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -24,7 +24,7 @@ import com.jogamp.opengl.util.texture.spi.TextureProvider.SupportsImageTypes;
 
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
-import msi.gama.util.file.GamaImageFile;
+import ummisco.gama.file.GamaImageFile;
 
 /**
  * Class PGMTextureProvider.
@@ -39,7 +39,7 @@ public class PGMTextureProvider implements TextureProvider, SupportsImageTypes {
 
 	/**
 	 * Method getImageTypes()
-	 * 
+	 *
 	 * @see com.jogamp.opengl.util.texture.spi.TextureProvider.SupportsImageTypes#getImageTypes()
 	 */
 	@Override
@@ -49,10 +49,11 @@ public class PGMTextureProvider implements TextureProvider, SupportsImageTypes {
 
 	/**
 	 * Method newTextureData()
-	 * 
+	 *
 	 * @see com.jogamp.opengl.util.texture.spi.TextureProvider#newTextureData(com.jogamp.opengl.GLProfile, java.io.File,
 	 *      int, int, boolean, java.lang.String)
 	 */
+	@SuppressWarnings ("deprecation")
 	@Override
 	public TextureData newTextureData(final GLProfile glp, final File file, final int internalFormat,
 			final int pixelFormat, final boolean mipmap, final String fileSuffix) throws IOException {
@@ -61,14 +62,13 @@ public class PGMTextureProvider implements TextureProvider, SupportsImageTypes {
 		if (f.getExtension(scope).equals("pgm")) {
 			final BufferedImage image = f.getImage(scope, true);
 			return AWTTextureIO.newTextureData(glp, image, internalFormat, pixelFormat, mipmap);
-		} else {
+		} else
 			return null;
-		}
 	}
 
 	/**
 	 * Method newTextureData()
-	 * 
+	 *
 	 * @see com.jogamp.opengl.util.texture.spi.TextureProvider#newTextureData(com.jogamp.opengl.GLProfile,
 	 *      java.io.InputStream, int, int, boolean, java.lang.String)
 	 */
@@ -80,7 +80,7 @@ public class PGMTextureProvider implements TextureProvider, SupportsImageTypes {
 
 	/**
 	 * Method newTextureData()
-	 * 
+	 *
 	 * @see com.jogamp.opengl.util.texture.spi.TextureProvider#newTextureData(com.jogamp.opengl.GLProfile, java.net.URL,
 	 *      int, int, boolean, java.lang.String)
 	 */

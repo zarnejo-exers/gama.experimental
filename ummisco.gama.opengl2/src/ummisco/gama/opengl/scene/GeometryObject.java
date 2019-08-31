@@ -10,15 +10,16 @@
 package ummisco.gama.opengl.scene;
 
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.ShapeType;
 
 import msi.gama.common.geometry.AxisAngle;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
-import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.ShapeDrawingAttributes;
+import ummisco.gama.file.GamaGeometryFile;
 import ummisco.gama.opengl.Abstract3DRenderer;
 
 public class GeometryObject extends AbstractObject {
@@ -44,23 +45,23 @@ public class GeometryObject extends AbstractObject {
 	}
 
 	// Package protected as it is only used by the static layers
-	GeometryObject(final IShape geometry, final GamaColor color, final IShape.Type type, final boolean empty) {
+	GeometryObject(final IShape geometry, final GamaColor color, final ShapeType type, final boolean empty) {
 		this(geometry, color, type, Abstract3DRenderer.getLineWidth());
 		attributes.setEmpty(empty);
 		attributes.setHeight(geometry.getDepth());
 	}
 
-	GeometryObject(final IShape geometry, final GamaColor color, final IShape.Type type, final double lineWidth) {
+	GeometryObject(final IShape geometry, final GamaColor color, final ShapeType type, final double lineWidth) {
 		this(geometry.getInnerGeometry(), new ShapeDrawingAttributes(geometry, (IAgent) null, color, color));
 	}
 
-	public IShape.Type getType() {
+	public ShapeType getType() {
 		return attributes.getType();
 	}
 
 	@Override
 	public boolean isFilled() {
-		return super.isFilled() && getType() != IShape.Type.GRIDLINE;
+		return super.isFilled() && getType() != ShapeType.GRIDLINE;
 	}
 
 	// public SimpleGeometryObject toSimpleGeometryObject() {

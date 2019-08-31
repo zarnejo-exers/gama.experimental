@@ -21,6 +21,7 @@ import java.awt.Color;
 // import com.jogamp.opengl.util.gl2.GLUT;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.ShapeType;
 
 import msi.gama.common.geometry.AxisAngle;
 import msi.gama.common.geometry.Envelope3D;
@@ -31,10 +32,8 @@ import msi.gama.common.geometry.Scaling3D;
 import msi.gama.common.geometry.Scaling3D.Heterogeneous;
 import msi.gama.common.geometry.UnboundedCoordinateSequence;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.metamodel.shape.IShape.Type;
 import msi.gama.util.GamaColor;
-import msi.gama.util.file.GamaGeometryFile;
+import ummisco.gama.file.GamaGeometryFile;
 import ummisco.gama.opengl.Abstract3DRenderer;
 
 /**
@@ -77,7 +76,8 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 	protected boolean applyRotation(final GeometryObject object) {
 		final AxisAngle rotation = object.getRotation();
 		final AxisAngle initRotation = object.getInitRotation();
-		if (rotation == null && initRotation == null) { return false; }
+		if (rotation == null && initRotation == null)
+			return false;
 		final GamaPoint loc = object.getLocation();
 		try {
 			gl.translateBy(loc.x, -loc.y, loc.z);
@@ -170,7 +170,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 				gl.drawCachedGeometry(file, border);
 			} else {
 				final double height = object.getHeight() == null ? 0d : object.getHeight();
-				final IShape.Type type = object.getType();
+				final ShapeType type = object.getType();
 				drawGeometry(geometry, solid, border, height, type);
 			}
 		} finally {
@@ -200,7 +200,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 	 *            the type of the geometry
 	 */
 	public void drawGeometry(final Geometry geom, final boolean solid, final Color border, final double height,
-			final IShape.Type type) {
+			final ShapeType type) {
 
 		System.out.println("-----> Cube drawer");
 		switch (type) {
@@ -314,7 +314,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		}
 	}
 
-	private void drawCachedGeometry(final IShape.Type type, final Color border) {
+	private void drawCachedGeometry(final ShapeType type, final Color border) {
 		gl.pushMatrix();
 		gl.translateBy(_center);
 		gl.rotateBy(_rot.rotateToHorizontal(_normal, _tangent, false).revertInPlace());
@@ -328,7 +328,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_center.y *= -1;
 		_scale.setTo(height);
 		_rot.setToIdentity();
-		drawCachedGeometry(Type.POINT, border);
+		drawCachedGeometry(ShapeType.POINT, border);
 	}
 
 	private void drawCube(final Geometry p, final boolean solid, final double height, final Color border) {
@@ -337,7 +337,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_vertices.getCenter(_center);
 		_tangent.withLocation(_vertices.at(0)).subtract(_vertices.at(1));
 		_scale.setTo(_tangent.norm(), _vertices.at(2).euclidianDistanceTo(_vertices.at(1)), height);
-		drawCachedGeometry(Type.CUBE, border);
+		drawCachedGeometry(ShapeType.CUBE, border);
 	}
 
 	private void drawPyramid(final Geometry p, final boolean solid, final double height, final Color border) {
@@ -346,7 +346,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_vertices.getCenter(_center);
 		_tangent.withLocation(_vertices.at(0)).subtract(_vertices.at(1));
 		_scale.setTo(height);
-		drawCachedGeometry(Type.PYRAMID, border);
+		drawCachedGeometry(ShapeType.PYRAMID, border);
 	}
 
 	private void drawSphere(final Geometry p, final boolean solid, final double height, final Color border) {
@@ -356,7 +356,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_vertices.getCenter(_center);
 		_tangent.withLocation(_center).subtract(_vertices.at(0));
 		_scale.setTo(height);
-		drawCachedGeometry(Type.SPHERE, border);
+		drawCachedGeometry(ShapeType.SPHERE, border);
 	}
 
 	private void drawCircle(final Geometry p, final boolean solid, final double height, final Color border) {
@@ -365,7 +365,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_vertices.getCenter(_center);
 		_tangent.withLocation(_center).subtract(_vertices.at(0));
 		_scale.setTo(height);
-		drawCachedGeometry(Type.CIRCLE, border);
+		drawCachedGeometry(ShapeType.CIRCLE, border);
 	}
 
 	public void drawRoundedRectangle(final GamaPoint pos, final double width, final double height, final Color fill,
@@ -373,7 +373,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_center.setCoordinate(pos);
 		_scale.setTo(width, height, 1);
 		gl.setCurrentColor(fill);
-		drawCachedGeometry(Type.ROUNDED, border);
+		drawCachedGeometry(ShapeType.ROUNDED, border);
 	}
 
 	private void drawCylinder(final Geometry g, final boolean solid, final double height, final Color border) {
@@ -383,7 +383,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_vertices.getNormal(true, 1, _normal);
 		_tangent.withLocation(_center).subtract(_vertices.at(0));
 		_scale.setTo(radius, radius, height);
-		drawCachedGeometry(Type.CYLINDER, border);
+		drawCachedGeometry(ShapeType.CYLINDER, border);
 	}
 
 	private void drawLineCylinder(final Geometry g, final boolean solid, final double radius, final Color border) {
@@ -400,11 +400,11 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 			_normal.normalize();
 			if (i > 0) {
 				_scale.setTo(radius);
-				drawCachedGeometry(Type.SPHERE, border);
+				drawCachedGeometry(ShapeType.SPHERE, border);
 			}
 			// draw tube
 			_scale.setTo(radius, radius, height);
-			drawCachedGeometry(Type.CYLINDER, border);
+			drawCachedGeometry(ShapeType.CYLINDER, border);
 
 		}
 		// _vertices.visit((v1, v2) -> {
@@ -443,7 +443,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 		_tangent.withLocation(_center).subtract(_vertices.at(0));
 		_rot.rotateToHorizontal(_normal, _tangent, false).revertInPlace();
 		_scale.setTo(radius, radius, height);
-		drawCachedGeometry(Type.CONE, border);
+		drawCachedGeometry(ShapeType.CONE, border);
 	}
 
 	private void drawTeapot(final Geometry p, final boolean solid, final double height, final Color border) {
@@ -482,7 +482,8 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 	 *            the size of the ROI box
 	 */
 	public void drawROIHelper(final Envelope3D envelope) {
-		if (envelope == null) { return; }
+		if (envelope == null)
+			return;
 		final Polygon polygon = envelope.yNegated().toGeometry();
 		gl.setCurrentColor(0, 0.5, 0, 0.15);
 		gl.setZIncrement(0);

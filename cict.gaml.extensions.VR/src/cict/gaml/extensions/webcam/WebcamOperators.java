@@ -24,9 +24,10 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
-import msi.gama.util.file.GamaImageFile;
+import msi.gama.util.file.IGamaFile;
 import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gama.util.matrix.IMatrix;
+import msi.gaml.types.GamaFileType;
 
 public class WebcamOperators {
 
@@ -99,7 +100,7 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot from webcam")
-	public static GamaImageFile cam_shot(final IScope scope, final String varName) {
+	public static IGamaFile.Image cam_shot(final IScope scope, final String varName) {
 		// Webcam wcam;
 		if (scope.getSimulation().getExperiment().getAttribute("webcam") == null) {
 
@@ -150,7 +151,8 @@ public class WebcamOperators {
 				System.out.println(rect.x + " " + rect.width + " " + rect.y + " " + rect.height);
 				buff.getGraphics().drawRect(rect.x, rect.y, rect.width, rect.height);
 			}
-			final GamaImageFile gif = new GamaImageFile(scope, varName, matrixValueFromImage(scope, buff, null));
+			final IGamaFile.Image gif = (msi.gama.util.file.IGamaFile.Image) GamaFileType.createFile(scope, varName,
+					matrixValueFromImage(scope, buff, null));
 			return gif;
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block

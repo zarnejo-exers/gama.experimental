@@ -4,25 +4,26 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
 
 import java.util.List;
 
+import org.locationtech.jts.geom.ShapeType;
+
 import msi.gama.common.geometry.AxisAngle;
 import msi.gama.common.geometry.Rotation3D;
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaFont;
 import msi.gaml.statements.draw.TextDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
 import ummisco.gama.opengl.Abstract3DRenderer;
-//import ummisco.gama.opengl.JOGLRenderer;
+// import ummisco.gama.opengl.JOGLRenderer;
 
 public class AxesLayerObject extends StaticLayerObject.World {
 
@@ -46,21 +47,22 @@ public class AxesLayerObject extends StaticLayerObject.World {
 
 	@Override
 	public void setScale(final GamaPoint s) {
-		if (s == null)
+		if (s == null) {
 			scale = DEFAULT_SCALE;
-		else
+		} else {
 			super.setScale(s);
+		}
 	}
 
 	@Override
 	void fillWithObjects(final List<AbstractObject> list) {
 		final double size = renderer.getMaxEnvDim();
-		if (renderer.useShader())
+		if (renderer.useShader()) {
 			for (int i = 0; i < 3; i++) {
 				final GamaPoint p = new GamaPoint(i == 0 ? size : 0, i == 1 ? size : 0, i == 2 ? size : 0);
 
 				// build axis
-				list.add(new GeometryObject(GamaGeometryType.buildLine(origin, p), COLORS[i], IShape.Type.LINESTRING,
+				list.add(new GeometryObject(GamaGeometryType.buildLine(origin, p), COLORS[i], ShapeType.LINESTRING,
 						2 * Abstract3DRenderer.getLineWidth()));
 
 				// build labels
@@ -72,17 +74,17 @@ public class AxesLayerObject extends StaticLayerObject.World {
 
 				// build arrows
 				final GeometryObject arrow = new GeometryObject(GamaGeometryType.buildArrow(p.times(1.1), size / 6),
-						COLORS[i], IShape.Type.POLYGON, false);
+						COLORS[i], ShapeType.POLYGON, false);
 				list.add(arrow);
 			}
-		else
+		} else {
 			for (int i = 0; i < 3; i++) {
 				final GamaPoint p = new GamaPoint(i == 0 ? size : 0, i == 1 ? size : 0, i == 2 ? size : 0);
 				final GamaShape axis2 = (GamaShape) GamaGeometryType.buildLineCylinder(origin, p, size / 40);
 				final AxisAngle rotation = i == 0 ? new AxisAngle(Rotation3D.PLUS_J, 90)
 						: i == 1 ? new AxisAngle(Rotation3D.MINUS_I, 90) : null;
 				// build axis
-				list.add(new GeometryObject(axis2, COLORS[i], IShape.Type.LINECYLINDER, false));
+				list.add(new GeometryObject(axis2, COLORS[i], ShapeType.LINECYLINDER, false));
 
 				// build labels
 				final GamaFont font = new GamaFont("Helvetica", 0, 18); // 0 for plain, 18 for text size.
@@ -95,9 +97,10 @@ public class AxesLayerObject extends StaticLayerObject.World {
 
 				GamaShape s = (GamaShape) GamaGeometryType.buildCone3D(size / 15, size / 6, origin);
 				s = new GamaShape(s, null, rotation, p.times(0.98));
-				final GeometryObject arrow = new GeometryObject(s, COLORS[i], IShape.Type.CONE, false);
+				final GeometryObject arrow = new GeometryObject(s, COLORS[i], ShapeType.CONE, false);
 
 				list.add(arrow);
 			}
+		}
 	}
 }

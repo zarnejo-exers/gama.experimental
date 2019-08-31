@@ -4,12 +4,14 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
 
 import java.util.ArrayList;
+
+import org.locationtech.jts.geom.ShapeType;
 
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
@@ -43,23 +45,23 @@ public class RotationHelperLayerObject extends LayerObject {
 			// create the rotation helper as "GeometryObject" in the list "objects".
 			// the rotation helper is a sphere centered in renderer.getRotationHelperPosition() and a size of "50.0 *
 			// (distance / 500)".
-			final ArrayList<AbstractObject> newElem = new ArrayList<AbstractObject>();
+			final ArrayList<AbstractObject> newElem = new ArrayList<>();
 			final GamaPoint pos = new GamaPoint(renderer.getRotationHelperPosition().x,
 					-renderer.getRotationHelperPosition().y, renderer.getRotationHelperPosition().z);
 			// interior sphere
 			final IShape interiorSphereShape = GamaGeometryType.buildSphere(5.0 * (distance / 500), pos);
-			final GeometryObject interiorSphere = new GeometryObject(interiorSphereShape,
-					new GamaColor(0.5, 0.5, 0.5, 1.0), IShape.Type.SPHERE, false);
+			final GeometryObject interiorSphere =
+					new GeometryObject(interiorSphereShape, new GamaColor(0.5, 0.5, 0.5, 1.0), ShapeType.SPHERE, false);
 			newElem.add(interiorSphere);
 			// exterior sphere
 			final IShape exteriorSphereShape = GamaGeometryType.buildSphere(49.0 * (distance / 500), pos);
-			final GeometryObject exteriorSphere = new GeometryObject(exteriorSphereShape,
-					new GamaColor(0.5, 0.5, 0.5, 0.1), IShape.Type.SPHERE, false);
+			final GeometryObject exteriorSphere =
+					new GeometryObject(exteriorSphereShape, new GamaColor(0.5, 0.5, 0.5, 0.1), ShapeType.SPHERE, false);
 			newElem.add(exteriorSphere);
 			// wireframe sphere
 			final IShape wireframeSphereShape = GamaGeometryType.buildSphere(50.0 * (distance / 500), pos);
-			final GeometryObject wireframeSphere = new GeometryObject(wireframeSphereShape,
-					new GamaColor(0.5, 0.5, 0.5, 1.0), IShape.Type.SPHERE, true);
+			final GeometryObject wireframeSphere =
+					new GeometryObject(wireframeSphereShape, new GamaColor(0.5, 0.5, 0.5, 1.0), ShapeType.SPHERE, true);
 			newElem.add(wireframeSphere);
 
 			objects.add(newElem);

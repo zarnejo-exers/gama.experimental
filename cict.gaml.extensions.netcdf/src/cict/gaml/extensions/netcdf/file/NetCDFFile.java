@@ -10,7 +10,6 @@
  **********************************************************************************************/
 package cict.gaml.extensions.netcdf.file;
 
-import java.io.IOException;
 import java.util.List;
 
 import msi.gama.common.geometry.Envelope3D;
@@ -32,7 +31,6 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayFloat;
-import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
@@ -76,7 +74,8 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 	 */
 	@Override
 	protected void fillBuffer(final IScope scope) throws GamaRuntimeException {
-		if (getBuffer() != null) { return; }
+		if (getBuffer() != null)
+			return;
 		initializeNetCDF(scope);
 		setBuffer(ncdata);
 	}
@@ -217,102 +216,6 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 
 	}
 
-	public static void main(final String args[]) throws Exception {
-
-		// Open the file and check to make sure it's valid.
-		final String filename = "D:/roms-benguela.nc";
-		NetcdfFile dataFile = null;
-
-		try {
-			dataFile = NetcdfFile.open(filename, null);
-			final List<Variable> lv = dataFile.getVariables();
-
-			for (final Variable v : lv) {
-				System.out.println("\n" + v.getName() + " " + v.getDataType() + " " + v.getShape().length);
-				final List<Dimension> ld = v.getDimensionsAll();
-				for (final Dimension d : ld) {
-					System.out.println(d.getName() + " " + d.getLength());
-				}
-			}
-
-			System.out.println("\n\n\n");
-
-			final List<Dimension> ld = dataFile.getDimensions();
-			for (final Dimension d : ld) {
-				System.out.println(d.getName() + " " + d.getLength());
-			}
-
-			System.out.println("\n\n\n");
-
-			final List<Attribute> la = dataFile.getGlobalAttributes();
-			for (final Attribute a : la) {
-				System.out.println(a.getName() + " " + a.getDataType() + " " + a.getValues());
-			}
-			int[] shape;
-			float[] latsIn;
-			final Variable zeta = dataFile.findVariable("zeta");
-
-			ArrayFloat.D3 latArray3;
-
-			latArray3 = (ArrayFloat.D3) zeta.read();
-
-			shape = latArray3.getShape();
-
-			latsIn = new float[shape[0] * shape[1] * shape[2]];
-			for (int i = 0; i < shape[0]; i++) {
-				for (int j = 0; j < shape[1]; j++) {
-					for (int k = 0; k < shape[2]; k++) {
-						latsIn[i * j * k] = latArray3.get(i, j, k);
-						// System.out.println(latsIn[i*j*k]);
-					}
-				}
-			}
-
-			// Variable lon_rho = dataFile.findVariable("lon_rho");
-			//
-			// ArrayFloat.D2 latArray;
-			//
-			// latArray = (ArrayFloat.D2) lon_rho.read();
-			//
-			// shape = latArray.getShape();
-			//
-			//
-			// latsIn = new float[shape[0] * shape[1]];
-			// for (int i = 0; i < shape[0]; i++) {
-			// for (int j = 0; j < shape[1]; j++) {
-			// latsIn[i * j] = latArray.get(i, j);
-			// System.out.println(latsIn[i]);
-			// }
-			// }
-
-			//
-			//
-			// // Check the coordinate variable data.
-			// for (int lat = 0; lat < NLAT; lat++)
-			// if (latsIn[lat] != START_LAT + 5. * lat)
-			// System.err.println("ERROR reading variable latitude");
-			//
-			// // Check longitude values.
-			// for (int lon = 0; lon < NLON; lon++)
-			// if (lonsIn[lon] != START_LON + 5. * lon)
-			// System.err.println("ERROR reading variable longitude");
-
-		} catch (final java.io.IOException e) {
-			System.out.println(" fail = " + e);
-			e.printStackTrace();
-		} finally {
-			if (dataFile != null) {
-				try {
-					dataFile.close();
-				} catch (final IOException ioe) {
-					ioe.printStackTrace();
-				}
-			}
-		}
-		System.out.println("*** SUCCESS reading example file sfc_pres_temp.nc!");
-
-	}
-
 	@operator (
 			value = "fetch",
 			can_be_const = false,
@@ -321,10 +224,11 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 			value = "general operator to manipylate multidimension netcdf data.")
 	public static IList<Integer> reduce_dimension(final IScope scope, final String varName, final IList<?> offsets) {
 		final String NCFile = "";
-		if (varName == null) { return GamaListFactory.create(scope, Types.NO_TYPE, 0); }
-		if (scope == null) {
+		if (varName == null)
 			return GamaListFactory.create(scope, Types.NO_TYPE, 0);
-		} else {
+		if (scope == null)
+			return GamaListFactory.create(scope, Types.NO_TYPE, 0);
+		else {
 			// NetcdfFile dataFile = null;
 			//
 			// try {
@@ -400,7 +304,6 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 	// ioe.getMessage(), scope);
 	// }
 	// }
-	//
 	// System.out.println("*** SUCCESS reading example file simple_xy.nc!");
 	//
 	// }

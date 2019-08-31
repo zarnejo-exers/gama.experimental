@@ -14,10 +14,11 @@ import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.network.skills.INetworkSkill;
+import ummisco.gama.extensions.network.skills.INetworkSkill;
 import ummisco.gama.remote.gui.connector.MQTTConnector;
 
 @vars ({ @variable (
@@ -45,13 +46,13 @@ import ummisco.gama.remote.gui.connector.MQTTConnector;
 		concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
 public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 	final static String SHARED_VARIABLE_LIST = "SHARED_VARIABLE_LIST";
-	ArrayList<SharedVariable> vars = new ArrayList<SharedVariable>();
+	ArrayList<SharedVariable> vars = new ArrayList<>();
 	MQTTConnector connection = null;
 
 	static {
 		DEBUG.OFF();
-	}	
-	
+	}
+
 	@action (
 			name = IRemoteGUISkill.CONFIGURE_TOPIC,
 			args = { @arg (
@@ -74,9 +75,10 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 					returns = "",
 					examples = { @example ("") }))
 	public void connectToServer(final IScope scope) {
-//		if (!scope.getSimulation().getAttributes().keySet().contains(SHARED_VARIABLE_LIST))
-		if (!scope.getSimulation().hasAttribute(SHARED_VARIABLE_LIST))			
+		// if (!scope.getSimulation().getAttributes().keySet().contains(SHARED_VARIABLE_LIST))
+		if (!scope.getSimulation().hasAttribute(SHARED_VARIABLE_LIST)) {
 			this.startSkill(scope);
+		}
 
 		final IAgent agt = scope.getAgent();
 
@@ -117,8 +119,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 		final String url = (String) agt.getAttribute(IRemoteGUISkill.SERVER_URL);
 		final String login = (String) agt.getAttribute(IRemoteGUISkill.LOGIN);
 		final String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);
-		@SuppressWarnings ("unchecked") final ArrayList<String> varName =
-				(ArrayList<String>) scope.getListArg(IRemoteGUISkill.VAR_NAME); // scope.getArg(IRemoteGUISkill.VAR_NAME,IType.MAP);
+		final IList<String> varName = scope.<String> getListArg(IRemoteGUISkill.VAR_NAME); // scope.getArg(IRemoteGUISkill.VAR_NAME,IType.MAP);
 		final String exposedName = (String) scope.getArg(IRemoteGUISkill.EXPOSED_NAME, IType.STRING);
 
 		try {
@@ -175,8 +176,9 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 	private ArrayList<SharedVariable> getShareVariables(final IScope scope) {
 		ArrayList<SharedVariable> res =
 				(ArrayList<SharedVariable>) scope.getSimulation().getAttribute(SHARED_VARIABLE_LIST);
-		if (res == null)
+		if (res == null) {
 			res = initialize(scope);
+		}
 		return res;
 	}
 

@@ -43,7 +43,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
-import msi.gama.util.file.GamaImageFile;
+import msi.gama.util.file.IGamaFile;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.types.IType;
@@ -292,8 +292,8 @@ public class RSkill extends Skill {
 		if (o instanceof GamaColor) {
 			res = "\"" + ((GamaColor) o).stringValue(null) + "\"";
 		}
-		if (o instanceof GamaImageFile) {
-			res = "\"" + ((GamaImageFile) o).getPath(null) + "\"";
+		if (o instanceof IGamaFile.Image) {
+			res = "\"" + ((IGamaFile.Image) o).getPath(null) + "\"";
 		}
 
 		// if(o instanceof IAgent) {
@@ -348,15 +348,15 @@ public class RSkill extends Skill {
 		}
 		System.loadLibrary("jri");
 
-		if (System.getenv("R_HOME") == null) {
+		if (System.getenv("R_HOME") == null)
 			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
-		}
 	}
 
 	public REXP Reval(final IScope scope, final String cmd) {
 		try {
 			re = Rengine.getMainEngine();
-			if (re == null) { return null; }
+			if (re == null)
+				return null;
 		} catch (final Exception ex) {
 			throw GamaRuntimeException.error("R cannot be found ...", scope);
 		}
@@ -369,9 +369,8 @@ public class RSkill extends Skill {
 		REXP x;
 		if (o instanceof REXP) {
 			x = (REXP) o;
-		} else {
+		} else
 			return o;
-		}
 
 		if (x.getType() == REXP.XT_ARRAY_STR) {
 			final String[] s = x.asStringArray();
@@ -422,7 +421,8 @@ public class RSkill extends Skill {
 			return a;
 		}
 
-		if (x.getType() == REXP.XT_STR) { return x.getContent(); }
+		if (x.getType() == REXP.XT_STR)
+			return x.getContent();
 		if (x.getType() == REXP.XT_FACTOR) {
 			final RFactor f = x.asFactor();
 			final IList<Object> a = GamaListFactory.create();

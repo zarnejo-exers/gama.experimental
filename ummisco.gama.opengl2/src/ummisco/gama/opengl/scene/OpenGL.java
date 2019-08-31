@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.ShapeType;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -56,12 +57,11 @@ import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.common.preferences.IPreferenceChangeListener;
 import msi.gama.common.util.ImageUtils;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.GAMA;
-import msi.gama.util.file.GamaGeometryFile;
-import msi.gama.util.file.GamaImageFile;
 import msi.gaml.operators.Maths;
 import msi.gaml.statements.draw.DrawingAttributes;
+import ummisco.gama.file.GamaGeometryFile;
+import ummisco.gama.file.GamaImageFile;
 import ummisco.gama.opengl.Abstract3DRenderer;
 import ummisco.gama.opengl.Abstract3DRenderer.PickingState;
 import ummisco.gama.opengl.TextRenderersCache;
@@ -437,7 +437,8 @@ public class OpenGL {
 	}
 
 	public void drawClosedLine(final ICoordinates yNegatedVertices, final Color color, final int number) {
-		if (color == null) { return; }
+		if (color == null)
+			return;
 		final Color previous = swapCurrentColor(color);
 		drawClosedLine(yNegatedVertices, number);
 		setCurrentColor(previous);
@@ -570,7 +571,8 @@ public class OpenGL {
 	}
 
 	public void setCurrentColor(final Color c, final double alpha) {
-		if (c == null) { return; }
+		if (c == null)
+			return;
 		setCurrentColor(c.getRed() / 255d, c.getGreen() / 255d, c.getBlue() / 255d, c.getAlpha() / 255d * alpha);
 	}
 
@@ -641,13 +643,15 @@ public class OpenGL {
 	}
 
 	public void enablePrimaryTexture() {
-		if (primaryTexture == NO_TEXTURE) { return; }
+		if (primaryTexture == NO_TEXTURE)
+			return;
 		bindTexture(primaryTexture);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
 	public void enableAlternateTexture() {
-		if (alternateTexture == NO_TEXTURE) { return; }
+		if (alternateTexture == NO_TEXTURE)
+			return;
 		bindTexture(alternateTexture);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
@@ -694,7 +698,8 @@ public class OpenGL {
 	}
 
 	public Texture getTexture(final File file, final boolean isAnimated, final boolean useCache) {
-		if (file == null) { return null; }
+		if (file == null)
+			return null;
 		Texture texture = null;
 		if (isAnimated || !useCache) {
 			final BufferedImage image = ImageUtils.getInstance().getImageFromFile(file, useCache, useCache);
@@ -856,7 +861,8 @@ public class OpenGL {
 	public void perspectiveText(final String string, final Font font, final double x, final double y, final double z) {
 		final TextRenderer r =
 				textRendererCache.get(font.getName(), font.getSize() * (int) layerScalingFactor, font.getStyle());
-		if (r == null) { return; }
+		if (r == null)
+			return;
 		r.setUseVertexArrays(false);
 
 		if (getCurrentColor() != null) {
@@ -873,7 +879,8 @@ public class OpenGL {
 			final double z) {
 		final TextRenderer r =
 				textRendererCache.get(font.getName(), font.getSize() * (int) layerScalingFactor, font.getStyle());
-		if (r == null) { return; }
+		if (r == null)
+			return;
 		r.setUseVertexArrays(false);
 		if (getCurrentColor() != null) {
 			r.setColor(getCurrentColor());
@@ -965,7 +972,8 @@ public class OpenGL {
 	public void drawCachedGeometry(final GamaGeometryFile file, final Color border) {
 		// if (geometryCache == null)
 		// return;
-		if (file == null) { return; }
+		if (file == null)
+			return;
 		// final Integer index = geometryCache.get(this, file);
 		// if (index != null)
 		// drawList(index);
@@ -978,23 +986,22 @@ public class OpenGL {
 		}
 	}
 
-	public void drawCachedGeometry(final IShape.Type id, final Color border) {
+	public void drawCachedGeometry(final ShapeType id, final Color border) {
 		// if (geometryCache == null)
 		// return;
-		if (id == null) {
+		if (id == null)
 			return;
-			// final BuiltInGeometry object = geometryCache.get(this, id);
-			// if (object != null) {
-			// object.draw(this);
-			// if (border != null && !isWireframe()) {
-			// final Color old = swapCurrentColor(border);
-			// getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
-			// object.draw(this);
-			// setCurrentColor(old);
-			// getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
-			// }
-			// }
-		}
+		// final BuiltInGeometry object = geometryCache.get(this, id);
+		// if (object != null) {
+		// object.draw(this);
+		// if (border != null && !isWireframe()) {
+		// final Color old = swapCurrentColor(border);
+		// getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
+		// object.draw(this);
+		// setCurrentColor(old);
+		// getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
+		// }
+		// }
 	}
 
 	public void initializeShapeCache() {
@@ -1038,7 +1045,7 @@ public class OpenGL {
 		// drawSphere(1.0, 5, 5);
 		// })));
 		//
-		// geometryCache.put(IShape.Type.ROUNDED, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// geometryCache.put(ShapeType.ROUNDED, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
 		// drawRoundedRectangle();
 		// })));
 		// geometryCache.put(SQUARE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {

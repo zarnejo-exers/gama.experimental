@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 
-import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.ast.ISyntacticElement;
 import msi.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
+import ummisco.gama.file.gaml.GamlResourceInfoProvider;
 
 /**
  *
@@ -44,12 +44,12 @@ public class LightModel {
 
 	/**
 	 * Constructor of LightModel using an URI to get the contents from that URI
-	 * 
+	 *
 	 * @param aUri
 	 *            {@code URI} the URI used to get the contents
 	 */
 	public LightModel(final URI aUri) {
-		this.modelElement = GAML.getContents(aUri);
+		this.modelElement = GamlResourceInfoProvider.INSTANCE.getContents(aUri);
 		this.modelElement.visitSpecies(visitorForLoading);
 		this.modelElement.visitGrids(visitorForLoading);
 		this.modelElement.visitExperiments(visitorForLoading);

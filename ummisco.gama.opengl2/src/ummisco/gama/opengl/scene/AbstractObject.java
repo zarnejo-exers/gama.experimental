@@ -5,7 +5,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -18,13 +18,13 @@ import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaMaterial;
-import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.FileDrawingAttributes;
+import ummisco.gama.file.GamaImageFile;
 
 public abstract class AbstractObject {
 
-	public static enum DrawerType {
+	public enum DrawerType {
 		GEOMETRY, STRING, FIELD
 	}
 
@@ -36,14 +36,16 @@ public abstract class AbstractObject {
 		if (attributes.getTextures() != null) {
 			textures = new int[attributes.getTextures().size()];
 			Arrays.fill(textures, OpenGL.NO_TEXTURE);
-		} else
+		} else {
 			textures = null;
+		}
 	}
 
 	public abstract DrawerType getDrawerType();
 
 	public int[] getTexturesId(final OpenGL gl) {
-		if (textures == null) { return null; }
+		if (textures == null)
+			return null;
 		// final int[] result = new int[textures.length];
 		for (int i = 0; i < textures.length; i++) {
 			final int t = getTexture(gl, i);
@@ -54,7 +56,7 @@ public abstract class AbstractObject {
 
 	/**
 	 * Returns the id of the texture at index 1
-	 * 
+	 *
 	 * @param gl
 	 * @return the id of the texture or Integer.MAX_VALUE if none is defined
 	 */
@@ -64,7 +66,7 @@ public abstract class AbstractObject {
 
 	/**
 	 * Returns the id of the texture at index 0
-	 * 
+	 *
 	 * @param gl
 	 * @return the id of the texture or Integer.MAX_VALUE if none is defined
 	 */
@@ -73,8 +75,10 @@ public abstract class AbstractObject {
 	}
 
 	private int getTexture(final OpenGL gl, final int order) {
-		if (textures == null) { return OpenGL.NO_TEXTURE; }
-		if (order < 0 || order > textures.length - 1) { return OpenGL.NO_TEXTURE; }
+		if (textures == null)
+			return OpenGL.NO_TEXTURE;
+		if (order < 0 || order > textures.length - 1)
+			return OpenGL.NO_TEXTURE;
 		if (isAnimated() || textures[order] == OpenGL.NO_TEXTURE) {
 			Object obj = null;
 			try {
@@ -100,8 +104,9 @@ public abstract class AbstractObject {
 	}
 
 	public final void draw(final OpenGL gl, final ObjectDrawer<AbstractObject> drawer, final boolean isPicking) {
-		if (isPicking)
+		if (isPicking) {
 			gl.registerForSelection(attributes.getIndex());
+		}
 		drawer.draw(this);
 		if (isPicking) {
 			gl.markIfSelected(attributes);

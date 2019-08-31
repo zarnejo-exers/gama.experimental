@@ -4,7 +4,7 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.vaoGenerator;
@@ -13,7 +13,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.Vector3f;
 
-import msi.gama.metamodel.shape.IShape.Type;
+import org.locationtech.jts.geom.ShapeType;
+
 import msi.gama.util.GamaColor;
 import ummisco.gama.modernOpenGL.DrawingEntity;
 import ummisco.gama.modernOpenGL.Material;
@@ -46,7 +47,7 @@ class StringObjectTransformer extends AbstractTransformer {
 																							// DrawingEntityGenerator)
 		this.isBillboarding = !strObj.iisInPerspective();
 		this.isLightInteraction = false;
-		this.type = Type.POLYGON;
+		this.type = ShapeType.POLYGON;
 
 		this.translation.y = -this.translation.y; // for a stringObject, the y is inverted (why ???)
 
@@ -64,8 +65,9 @@ class StringObjectTransformer extends AbstractTransformer {
 
 		computeNormals();
 		triangulate();
-		if (!this.isBillboarding)
+		if (!this.isBillboarding) {
 			applyTransformation(); // FIXME : need refactoring
+		}
 	}
 
 	@Override
@@ -75,7 +77,7 @@ class StringObjectTransformer extends AbstractTransformer {
 
 	protected ArrayList<DrawingEntity> getStringDrawingEntities() {
 		// the number of drawing entity is equal to 1
-		final ArrayList<DrawingEntity> result = new ArrayList<DrawingEntity>();
+		final ArrayList<DrawingEntity> result = new ArrayList<>();
 
 		if (color == null) {
 			color = new GamaColor(1.0, 1.0, 0, 1.0); // set the default color to yellow.

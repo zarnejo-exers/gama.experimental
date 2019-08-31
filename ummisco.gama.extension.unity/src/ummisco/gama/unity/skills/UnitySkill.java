@@ -13,6 +13,8 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 import com.thoughtworks.xstream.XStream;
 
+import irit.gama.extensions.serialize.factory.StreamConverter;
+import irit.gama.extensions.serialize.gamaType.converters.ConverterScope;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.metamodel.agent.IAgent;
@@ -37,12 +39,10 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.network.common.IConnector;
-import ummisco.gama.network.mqtt.MQTTConnector;
-import ummisco.gama.network.skills.INetworkSkill;
-import ummisco.gama.network.skills.NetworkSkill;
-import ummisco.gama.serializer.factory.StreamConverter;
-import ummisco.gama.serializer.gamaType.converters.ConverterScope;
+import ummisco.gama.extensions.network.common.IConnector;
+import ummisco.gama.extensions.network.mqtt.MQTTConnector;
+import ummisco.gama.extensions.network.skills.INetworkSkill;
+import ummisco.gama.extensions.network.skills.NetworkSkill;
 import ummisco.gama.unity.data.type.rgbColor;
 import ummisco.gama.unity.messages.ColorTopicMessage;
 import ummisco.gama.unity.messages.CreateTopicMessage;

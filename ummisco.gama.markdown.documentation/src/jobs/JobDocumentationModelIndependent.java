@@ -17,14 +17,14 @@ import org.eclipse.emf.common.util.URI;
 import markdownSyntactic.IParser;
 import markdownSyntactic.LightModel;
 import markdownSyntactic.MarkdownModelDocumentor;
-import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
+import ummisco.gama.gaml.indexer.GamlResourceIndexer;
 import ummisco.gama.ui.navigator.contents.ResourceManager;
 import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
+
 /**
- * 
- * @author damienphilippon
- * Date : 19 Dec 2017
- * Class used to do a Documentation job for an Independent Model (build the model, its index and its imports documentation)
+ *
+ * @author damienphilippon Date : 19 Dec 2017 Class used to do a Documentation job for an Independent Model (build the
+ *         model, its index and its imports documentation)
  */
 public class JobDocumentationModelIndependent extends JobDocumentation {
 
@@ -35,104 +35,122 @@ public class JobDocumentationModelIndependent extends JobDocumentation {
 
 	/**
 	 * Constructor using a given model file and a given output directory
-	 * @param aFile {@code WrappedGamaFile} the file containing the model
-	 * @param directory {@code String} the string representing the path for the outputs
+	 *
+	 * @param aFile
+	 *            {@code WrappedGamaFile} the file containing the model
+	 * @param directory
+	 *            {@code String} the string representing the path for the outputs
 	 */
-	public JobDocumentationModelIndependent(WrappedGamaFile aFile, String directory) {
+	public JobDocumentationModelIndependent(final WrappedGamaFile aFile, final String directory) {
 		super(directory);
 		this.file = aFile;
 	}
-	
+
 	/**
 	 * Method to run the job in background
 	 */
-	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 		generateForWrappedGamaFile(this.file);
 		generateIndex();
 		return Status.OK_STATUS;
 	}
+
 	/**
 	 * Overriding the method to build the documentatioon of the imported models also
 	 */
-	public void generateForWrappedGamaFile(WrappedGamaFile aFile)
-	{ 
-		//Build the documentation of the model first
+	@Override
+	public void generateForWrappedGamaFile(final WrappedGamaFile aFile) {
+		// Build the documentation of the model first
 		IPath pathProject = aFile.getProject().getResource().getLocation();
 		IPath pathResource = aFile.getResource().getLocation();
-		String pathResourceToProject = FilenameUtils.removeExtension(pathResource.makeRelativeTo(pathProject).toOSString());
-		(new File(directory+File.separator+pathResourceToProject+".md")).getParentFile().mkdirs();
-		MarkdownModelDocumentor modelDoc = new MarkdownModelDocumentor(aFile,directory+File.separator+pathResourceToProject+".md");
+		String pathResourceToProject =
+				FilenameUtils.removeExtension(pathResource.makeRelativeTo(pathProject).toOSString());
+		new File(directory + File.separator + pathResourceToProject + ".md").getParentFile().mkdirs();
+		MarkdownModelDocumentor modelDoc =
+				new MarkdownModelDocumentor(aFile, directory + File.separator + pathResourceToProject + ".md");
 		modelDoc.generateMarkdown();
 		modelDoc.saveMarkdown();
-		
-		
-		//Add the links to the different species and experiments contained in the model
+
+		// Add the links to the different species and experiments contained in the model
 		LightModel model = new LightModel(URI.createURI(aFile.getResource().getLocationURI().toString()));
-		if(modelsDone.contains(aFile.getResource().getLocationURI().toString())==false)
-		{
+		if (modelsDone.contains(aFile.getResource().getLocationURI().toString()) == false) {
 			modelsDone.add(aFile.getResource().getLocationURI().toString());
 			IPath importedModel = aFile.getResource().getLocation();
 			IPath relativisedPath = importedModel.makeRelativeTo(new Path(indexPath));
-			for(String aSpecies : model.speciesLink.keySet())
-			{
+			for (String aSpecies : model.speciesLink.keySet()) {
 				String linkToSpecies = model.speciesLink.get(aSpecies);
-				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToSpecies;
+				linkToSpecies = FilenameUtils.removeExtension(
+						relativisedPath.toString().replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", "")
+								.replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", ""))
+						+ ".md#" + linkToSpecies;
 				this.speciesLink.put(aSpecies, linkToSpecies);
 			}
-			for(String anExperiment : model.experimentsLink.keySet())
-			{
+			for (String anExperiment : model.experimentsLink.keySet()) {
 				String linkToExperiment = model.experimentsLink.get(anExperiment);
-				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToExperiment;
+				linkToExperiment = FilenameUtils.removeExtension(
+						relativisedPath.toString().replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", "")
+								.replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", ""))
+						+ ".md#" + linkToExperiment;
 				this.experimentsLink.put(anExperiment, linkToExperiment);
 			}
 		}
-		
-		//Generate the documentation for the imported models
-		
-		Iterator<URI> importedUris = GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
-		while(importedUris.hasNext())
-		{
+
+		// Generate the documentation for the imported models
+
+		Iterator<URI> importedUris = GamlResourceIndexer.INSTANCE
+				.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
+		while (importedUris.hasNext()) {
 			URI tmpUri = importedUris.next();
-			//Compute the relative path
+			// Compute the relative path
 			IPath importedModelPath = new Path(tmpUri.toFileString().replace("file:", ""));
 			IPath relativisedPath = importedModelPath.makeRelativeTo(new Path(indexPath));
-			IFile tmpfile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(importedModelPath); 
-			WrappedGamaFile importedModel = (WrappedGamaFile) ResourceManager.getInstance().findWrappedInstanceOf(tmpfile);
-			
+			IFile tmpfile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(importedModelPath);
+			WrappedGamaFile importedModel =
+					(WrappedGamaFile) ResourceManager.getInstance().findWrappedInstanceOf(tmpfile);
+
 			LightModel lightModelImported = new LightModel(tmpUri);
-			
-			//If the model has not been documented yet by the job, add the links to its species and experiments
-			if(modelsDone.contains(importedModel.getResource().getLocationURI().toString())==false)
-			{
+
+			// If the model has not been documented yet by the job, add the links to its species and experiments
+			if (modelsDone.contains(importedModel.getResource().getLocationURI().toString()) == false) {
 				modelsDone.add(importedModel.getResource().getLocationURI().toString());
 				IPath importedLightModelPath = importedModel.getResource().getLocation();
 				IPath relativisedLightModelPath = importedLightModelPath.makeRelativeTo(new Path(indexPath));
-				for(String aSpecies : lightModelImported.speciesLink.keySet())
-				{
+				for (String aSpecies : lightModelImported.speciesLink.keySet()) {
 					String linkToSpecies = model.speciesLink.get(aSpecies);
-					linkToSpecies=FilenameUtils.removeExtension(relativisedLightModelPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToSpecies;
+					linkToSpecies = FilenameUtils
+							.removeExtension(relativisedLightModelPath.toString()
+									.replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", "")
+									.replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", ""))
+							+ ".md#" + linkToSpecies;
 					this.speciesLink.put(aSpecies, linkToSpecies);
 				}
-				for(String anExperiment : lightModelImported.experimentsLink.keySet())
-				{
+				for (String anExperiment : lightModelImported.experimentsLink.keySet()) {
 					String linkToExperiment = model.experimentsLink.get(anExperiment);
-					linkToExperiment=FilenameUtils.removeExtension(relativisedLightModelPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToExperiment;
+					linkToExperiment = FilenameUtils
+							.removeExtension(relativisedLightModelPath.toString()
+									.replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", "")
+									.replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", ""))
+							+ ".md#" + linkToExperiment;
 					this.experimentsLink.put(anExperiment, linkToExperiment);
 				}
 			}
-			String pathResourceModelToProject = FilenameUtils.removeExtension(relativisedPath.toOSString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""));
-			(new File(directory+File.separator+pathResourceModelToProject+".md")).getParentFile().mkdirs();
-			
-			//Generate the documentation of the imported models
-			MarkdownModelDocumentor importedModelDoc = new MarkdownModelDocumentor(importedModel,directory+File.separator+pathResourceModelToProject+".md");
+			String pathResourceModelToProject =
+					FilenameUtils.removeExtension(relativisedPath.toOSString().replaceFirst(".." + IParser.SPLITTER, "")
+							.replaceFirst("../", "").replaceFirst(".." + IParser.SPLITTER, "").replaceFirst("../", ""));
+			new File(directory + File.separator + pathResourceModelToProject + ".md").getParentFile().mkdirs();
+
+			// Generate the documentation of the imported models
+			MarkdownModelDocumentor importedModelDoc = new MarkdownModelDocumentor(importedModel,
+					directory + File.separator + pathResourceModelToProject + ".md");
 			importedModelDoc.generateMarkdown();
 			importedModelDoc.saveMarkdown();
-			
+
 		}
-		//Release the memory used by the variables
-		importedUris=null;
-		pathProject=null;
-		pathResource=null;
-		pathResourceToProject=null;
+		// Release the memory used by the variables
+		importedUris = null;
+		pathProject = null;
+		pathResource = null;
+		pathResourceToProject = null;
 	}
 }

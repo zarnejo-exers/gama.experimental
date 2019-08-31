@@ -13,10 +13,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 
-import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
-import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.ast.ISyntacticElement;
 import msi.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
+import ummisco.gama.file.gaml.GamlResourceInfoProvider;
+import ummisco.gama.gaml.indexer.GamlResourceIndexer;
 import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
 import visitors.VisitorExperiments;
 import visitors.VisitorModel;
@@ -122,7 +122,8 @@ public class MarkdownModelDocumentor {
 	 */
 	public MarkdownModelDocumentor(final WrappedGamaFile aFile, final String pathToSave) {
 		this.modelFile = aFile;
-		this.modelElement = GAML.getContents(URI.createURI(aFile.getResource().getLocationURI().toString()));
+		this.modelElement = GamlResourceInfoProvider.INSTANCE
+				.getContents(URI.createURI(aFile.getResource().getLocationURI().toString()));
 		this.mDText = new StringBuilder();
 
 		// load the imports, species and experiments to give them to the visitors
@@ -150,8 +151,8 @@ public class MarkdownModelDocumentor {
 	 */
 	public void loadImports() {
 		final IPath pathModel = modelFile.getResource().getRawLocation();
-		Iterator<URI> importedUris =
-				GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
+		Iterator<URI> importedUris = GamlResourceIndexer.INSTANCE
+				.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
 
 		while (importedUris.hasNext()) {
 			final URI tmpUri = importedUris.next();

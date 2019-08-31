@@ -13,25 +13,26 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.ShapeType;
+
 import com.google.common.collect.ImmutableList;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.GL3;
-import org.locationtech.jts.geom.Geometry;
 
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.interfaces.ILayer;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.outputs.layers.OverlayLayer;
 import msi.gama.runtime.IScope;
-import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
+import ummisco.gama.file.GamaGeometryFile;
 import ummisco.gama.modernOpenGL.DrawingEntity;
 import ummisco.gama.opengl.Abstract3DRenderer;
 import ummisco.gama.opengl.ModernRenderer;
@@ -97,7 +98,8 @@ public class LayerObject {
 	}
 
 	public void draw(final OpenGL gl) {
-		if (isInvalid()) { return; }
+		if (isInvalid())
+			return;
 		if (renderer.useShader()) {
 			drawWithShader(gl.getGL());
 		} else {
@@ -229,7 +231,7 @@ public class LayerObject {
 		gl.scaleBy(scale.x, scale.y, 1);
 		gl.setCurrentColor(((OverlayLayer) layer).getData().getBackgroundColor(scope));
 		gl.setCurrentObjectAlpha(((OverlayLayer) layer).getData().getTransparency(scope));
-		gl.drawCachedGeometry(IShape.Type.ROUNDED, null);
+		gl.drawCachedGeometry(ShapeType.ROUNDED, null);
 		gl.popMatrix();
 		gl.translateBy(offset.x, -offset.y, 0);
 	}
@@ -264,7 +266,8 @@ public class LayerObject {
 	}
 
 	public boolean isStatic() {
-		if (layer == null) { return true; }
+		if (layer == null)
+			return true;
 		return !layer.getData().isDynamic();
 	}
 
@@ -341,13 +344,15 @@ public class LayerObject {
 	}
 
 	private int getTrace() {
-		if (layer == null) { return 0; }
+		if (layer == null)
+			return 0;
 		final Integer trace = layer.getData().getTrace();
 		return trace == null ? 0 : trace;
 	}
 
 	private boolean getFading() {
-		if (layer == null) { return false; }
+		if (layer == null)
+			return false;
 		final Boolean fading = layer.getData().getFading();
 		return fading == null ? false : fading;
 	}

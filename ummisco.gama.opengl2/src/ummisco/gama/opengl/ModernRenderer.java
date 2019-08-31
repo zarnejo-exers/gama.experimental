@@ -25,11 +25,11 @@ import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.outputs.layers.OverlayLayer;
 import msi.gama.outputs.layers.charts.ChartOutput;
-import msi.gama.util.file.GamaFile;
-import msi.gama.util.file.GamaGeometryFile;
-import msi.gama.util.file.GamaImageFile;
+import msi.gama.util.file.IGamaFile;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
+import ummisco.gama.file.GamaGeometryFile;
+import ummisco.gama.file.GamaImageFile;
 import ummisco.gama.modernOpenGL.ModernDrawer;
 import ummisco.gama.opengl.utils.LightHelper;
 import ummisco.gama.opengl.vaoGenerator.DrawingEntityGenerator;
@@ -61,14 +61,14 @@ public class ModernRenderer extends Abstract3DRenderer {
 			for (int cornerId = 0; cornerId < coords.length; cornerId++) {
 				final float xCorner = coords[cornerId][0];
 				final float yCorner = coords[cornerId][1];
-				if (Math.abs(mouse.x - xCorner) < 0.03 && Math.abs(mouse.y - yCorner) < 0.03) { return cornerId; }
+				if (Math.abs(mouse.x - xCorner) < 0.03 && Math.abs(mouse.y - yCorner) < 0.03)
+					return cornerId;
 			}
 			// check if the click has been in the center of the screen (in the
 			// intersection between the diagonals)
 			final float[] centerPosition = centerScreen(coords);
-			if (Math.abs(mouse.x - centerPosition[0]) < 0.03 && Math.abs(mouse.y - centerPosition[1]) < 0.03) {
+			if (Math.abs(mouse.x - centerPosition[0]) < 0.03 && Math.abs(mouse.y - centerPosition[1]) < 0.03)
 				return 10;
-			}
 			return -1;
 		}
 
@@ -219,7 +219,8 @@ public class ModernRenderer extends Abstract3DRenderer {
 	public void display(final GLAutoDrawable drawable) {
 
 		currentScene = sceneBuffer.getSceneToRender();
-		if (currentScene == null) { return; }
+		if (currentScene == null)
+			return;
 		gl = drawable.getGL().getGL3();
 
 		drawer.prepareFrameBufferObject();
@@ -254,7 +255,8 @@ public class ModernRenderer extends Abstract3DRenderer {
 	public void reshape(final GLAutoDrawable drawable, final int arg1, final int arg2, final int width,
 			final int height) {
 		// Get the OpenGL graphics context
-		if (width <= 0 || height <= 0) { return; }
+		if (width <= 0 || height <= 0)
+			return;
 		updatePerspective();
 	}
 
@@ -320,8 +322,9 @@ public class ModernRenderer extends Abstract3DRenderer {
 
 	@SuppressWarnings ("rawtypes")
 	@Override
-	public Rectangle2D drawFile(final GamaFile file, final DrawingAttributes attributes) {
-		if (sceneBuffer.getSceneToUpdate() == null) { return null; }
+	public Rectangle2D drawFile(final IGamaFile file, final DrawingAttributes attributes) {
+		if (sceneBuffer.getSceneToUpdate() == null)
+			return null;
 		if (attributes.getSize() == null) {
 			attributes.setSize(Scaling3D.of(worldDimensions));
 		}

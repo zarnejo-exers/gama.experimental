@@ -6,10 +6,10 @@ Bundle-Version: 1.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: msi.gama.core;bundle-version="1.7.0",
  msi.gama.ext;bundle-version="1.7.0",
- ummisco.gama.network;bundle-version="1.7.0",
- ummisco.gama.serialize;bundle-version="1.7.0"
+ ummisco.gama.extensions.network;bundle-version="1.7.0",
+ irit.gama.extensions.serialize;bundle-version="1.7.0"
 Bundle-ClassPath: .,
  ext/mpi.jar
 Export-Package: femto_st.gama.mpi
-Import-Package: ummisco.gama.serializer.factory
+Import-Package: irit.gama.extensions.serialize.factory
 Automatic-Module-Name: femto.st.gama.mpi

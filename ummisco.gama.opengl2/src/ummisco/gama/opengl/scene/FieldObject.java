@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
+import ummisco.gama.file.GamaImageFile;
 
 public class FieldObject extends AbstractObject {
 
@@ -44,10 +44,13 @@ public class FieldObject extends AbstractObject {
 	public BufferedImage getDirectImage(final int order) {
 		final FieldDrawingAttributes a = (FieldDrawingAttributes) attributes;
 		final List<?> textures = a.getTextures();
-		if (textures == null || textures.size() > order + 1) { return null; }
+		if (textures == null || textures.size() > order + 1)
+			return null;
 		final Object t = textures.get(order);
-		if (t instanceof BufferedImage) { return (BufferedImage) t; }
-		if (t instanceof GamaImageFile) { return ((GamaImageFile) t).getImage(null, true); }
+		if (t instanceof BufferedImage)
+			return (BufferedImage) t;
+		if (t instanceof GamaImageFile)
+			return ((GamaImageFile) t).getImage(null, true);
 		return null;
 	}
 
