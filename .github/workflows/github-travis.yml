@@ -22,7 +22,60 @@ jobs:
           distribution: 'adopt-openj9'
           java-version: '15'
           java-package: jdk  
-
+      - name: Setup Repo credentials
+        # maven-settings-action v2.4.0
+        uses: s4u/maven-settings-action@e967605742bd38de606cf6edb7c89349ce917c6a
+        with:
+          servers: |
+            [{
+                "id": "repo.releases.mirror",
+                "username": "${{ secrets.USER_ID }}",
+                "password": "${{ secrets.USER_PWD }}"
+            },
+            {
+                "id": "repo.snapshots.mirror",
+                "username": "${{ secrets.USER_ID }}",
+                "password": "${{ secrets.USER_PWD }}"
+            },
+            {
+                "id": "repo.plugin.releases.mirror",
+                "username": "${{ secrets.USER_ID }}",
+                "password": "${{ secrets.USER_PWD }}"
+            },
+            {
+                "id": "repo.plugin.snapshots.mirror",
+                "username": "${{ secrets.USER_ID }}",
+                "password": "${{ secrets.USER_PWD }}"
+            }]
+          mirrors: |
+            [{
+                "id": "repo.releases.mirror",
+                "name": "repo releases mirror",
+                "mirrorOf": "p2Repo",
+                "url": "http://updates.gama-platform.org/1.8.2",
+                "blocked": false
+            },
+            {
+                "id": "repo.snapshots.mirror",
+                "name": "repo snapshots mirror",
+                "mirrorOf": "p2Repo",
+                "url": "http://updates.gama-platform.org/1.8.2",
+                "blocked": false
+            },
+            {
+                "id": "repo.plugin.releases.mirror",
+                "name": "repo plugin releases mirror",
+                "mirrorOf": "p2Repo",
+                "url": "http://updates.gama-platform.org/1.8.2",
+                "blocked": false
+            },
+            {
+                "id": "repo.plugin.snapshots.mirror",
+                "name": "repo plugin snapshots mirror",
+                "mirrorOf": "p2Repo",
+                "url": "http://updates.gama-platform.org/1.8.2",
+                "blocked": false
+            }]
       - name: Prepare build
         run: |
           echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=error -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx2048m'" >> ~/.mavenrc
