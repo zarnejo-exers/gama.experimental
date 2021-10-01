@@ -76,7 +76,7 @@ generate_p2updatesite_category
 #git_push
 
 cd msi.gama.experimental.parent &&
-mvn clean install -U &&
+mvn clean install -P p2Repo --settings ../settings.xml&&
 cd -
 
 cd msi.gama.experimental.p2updatesite &&
