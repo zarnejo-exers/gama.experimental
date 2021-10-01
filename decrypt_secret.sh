@@ -8,7 +8,7 @@ footer=$(<$GITHUB_WORKSPACE/settings_footer.xml)
 echo "$header $core $footer"> $GITHUB_WORKSPACE/settings.xml
 
 
-echo "DEPLOY" 
+echo "DEPLOY"  
 mkdir -m 0700 -p ~/.ssh 
 chmod 750 ~
 chmod 700 ~/.ssh 
