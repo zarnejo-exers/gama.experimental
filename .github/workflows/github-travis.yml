@@ -53,6 +53,13 @@ jobs:
             bash $GITHUB_WORKSPACE/travis_build.sh 
         env:
           MSG: ${ github.event.head_commit.message } 
+          SSH_USER_PWD: ${{ secrets.USER_PWD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          GITHUB_TOKEN: ${{ github.token }}
+          SSHPASS: ${{ secrets.USER_PWD }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TRAVIS_COMMIT: ${ GITHUB_SHA }
+          TRAVIS_EVENT_TYPE: ${{ github.event_name }}
               
       - name: Publish to Github
         shell: bash
