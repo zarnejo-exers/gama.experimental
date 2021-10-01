@@ -29,7 +29,6 @@ jobs:
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
           bash custom_mvn.sh
           cat ~/.m2/settings.xml 
-          bash decrypt_secret.sh
         env:
           MSG: ${ github.event.head_commit.message } 
           SSH_USER_PWD: ${{ secrets.USER_PWD }}
@@ -48,9 +47,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build with Maven
-        shell: bash
-        run: $GITHUB_WORKSPACE/travis_build.sh 
+      - name: Build with Maven 
+        run: |
+            bash decrypt_secret.sh
+            bash $GITHUB_WORKSPACE/travis_build.sh 
         env:
           MSG: ${ github.event.head_commit.message } 
               
