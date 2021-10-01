@@ -82,3 +82,7 @@ cd -
 cd msi.gama.experimental.p2updatesite &&
 mvn install -P p2Repo --settings ../settings.xml && 
 cd -
+
+cd msi.gama.experimental.p2updatesite &&
+mvn deploy -P p2Repo --settings ../settings.xml && 
+cd -
