@@ -79,8 +79,7 @@ jobs:
       - name: Prepare build
         run: |
           echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=error -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx2048m'" >> ~/.mavenrc
-          sudo chmod +x $GITHUB_WORKSPACE/*.sh 
-          bash custom_mvn.sh
+          sudo chmod +x $GITHUB_WORKSPACE/*.sh           
           cat ~/.m2/settings.xml 
         env:
           MSG: ${ github.event.head_commit.message } 
